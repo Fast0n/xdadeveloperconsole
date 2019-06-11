@@ -1,0 +1,21 @@
+<resources>
+    <string name="url">https://9e51a60e.ngrok.io</string>
+    
+    <string name="app_name">XDA Labs Console</string>
+    <string name="title_activity_login">LoginActivity</string>
+
+    <string name="add_access">Login with your XDA Account</string>
+
+
+    <string name="tv_forget_password">Forgot Password?</string>
+    <string name="btn_login">Invia</string>
+    <string name="edt_password" translatable="false">Password</string>
+    <string name="edt_id">Username</string>
+    <string name="title_activity_home">HomeActivity</string>
+
+
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_apps">My Apps</string>
+    <string name="title_xposed">My Xposed Modules</string>
+
+</resources>

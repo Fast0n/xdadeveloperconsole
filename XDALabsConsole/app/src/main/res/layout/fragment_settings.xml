@@ -1,0 +1,413 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/tools"
+    xmlns:app2="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/constraintLayout2"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/color_background"
+    app:ignore="NamespaceTypo">
+
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="24dp"
+        android:fontFamily="sans-serif-light"
+        android:text="Settings"
+        android:textAllCaps="true"
+        android:textColor="?attr/color_text"
+        android:textSize="30sp"
+        app2:layout_constraintEnd_toEndOf="parent"
+        app2:layout_constraintStart_toStartOf="parent"
+        app2:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/title_account"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:fontFamily="sans-serif-light"
+        android:text="Settings Account"
+        android:textAllCaps="true"
+        android:textColor="?attr/color_text"
+        android:textSize="24sp"
+        app2:layout_constraintEnd_toEndOf="parent"
+        app2:layout_constraintStart_toStartOf="parent"
+        app2:layout_constraintTop_toBottomOf="@+id/title" />
+
+
+    <TextView
+        android:id="@+id/title_account2"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="8dp"
+        android:fontFamily="sans-serif-light"
+        android:text="Settings Application"
+        android:textAllCaps="true"
+        android:textColor="?attr/color_text"
+        android:textSize="24sp"
+        app2:layout_constraintEnd_toEndOf="parent"
+        app2:layout_constraintHorizontal_bias="0.0"
+        app2:layout_constraintStart_toStartOf="parent"
+        app2:layout_constraintTop_toBottomOf="@+id/btn_save" />
+
+    <ScrollView
+        android:id="@+id/sv_settingsaccount"
+        android:layout_width="0dp"
+        android:layout_height="350dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:scrollbars="none"
+        app2:layout_constraintEnd_toEndOf="parent"
+        app2:layout_constraintStart_toStartOf="parent"
+        app2:layout_constraintTop_toBottomOf="@+id/title_account">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@id/constraintLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            app2:layout_constraintTop_toBottomOf="@+id/title">
+
+
+            <TextView
+                android:id="@+id/desc_info"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:text="You may update the following information below. Other settings, such as your password and other XDA information, must be completed on your UserCP."
+                android:textColor="?attr/color_text"
+                app2:layout_constraintEnd_toEndOf="parent"
+                app2:layout_constraintStart_toStartOf="parent"
+                app2:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/title_developer"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:fontFamily="sans-serif-light"
+                android:text="Developer Settings"
+                android:textAllCaps="true"
+                android:textColor="?attr/color_text"
+                android:textSize="24sp"
+                app2:layout_constraintEnd_toEndOf="parent"
+                app2:layout_constraintHorizontal_bias="0.0"
+                app2:layout_constraintStart_toStartOf="parent"
+                app2:layout_constraintTop_toBottomOf="@+id/desc_info" />
+
+            <TextView
+                android:id="@+id/title_developer2"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
+                android:background="?attr/colorPrimary"
+                android:fontFamily="sans-serif-light"
+                android:text="ciao come va in quel di milano, oggi è una bella giornata solo che secondo me si potrebbe fare di meglio nel senso metafico."
+                android:textColor="?attr/color_object"
+                app2:layout_constraintBottom_toBottomOf="parent"
+                app2:layout_constraintEnd_toEndOf="parent"
+                app2:layout_constraintStart_toStartOf="parent"
+                app2:layout_constraintTop_toBottomOf="@+id/la_paypal" />
+
+            <LinearLayout
+                android:id="@+id/la_name"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:orientation="vertical"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
+                app2:layout_constraintEnd_toEndOf="parent"
+                app2:layout_constraintHorizontal_bias="1.0"
+                app2:layout_constraintStart_toStartOf="parent"
+                app2:layout_constraintTop_toBottomOf="@+id/title_developer">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:text="Display Name"
+                    android:textColor="?attr/color_text"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    app2:layout_constraintEnd_toEndOf="parent"
+                    app2:layout_constraintStart_toStartOf="parent"
+                    app2:layout_constraintTop_toBottomOf="@+id/textInputLayout" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/til_name"
+                    style="@style/LoginTextInputLayoutStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint=""
+                    android:theme="@style/LoginTextInputLayoutStyle"
+                    app2:layout_constraintEnd_toEndOf="parent"
+                    app2:layout_constraintStart_toStartOf="parent">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/edt_name"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:backgroundTint="?attr/color_text"
+                        android:ems="10"
+                        android:textColor="?attr/colorPrimary"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/edt_id" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/la_email"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:orientation="vertical"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
+                app2:layout_constraintEnd_toEndOf="parent"
+                app2:layout_constraintHorizontal_bias="1.0"
+                app2:layout_constraintStart_toStartOf="parent"
+                app2:layout_constraintTop_toBottomOf="@+id/la_name">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:text="Support Email Adress"
+                    android:textColor="?attr/color_text"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    app2:layout_constraintEnd_toEndOf="parent"
+                    app2:layout_constraintStart_toStartOf="parent"
+                    app2:layout_constraintTop_toBottomOf="@+id/textInputLayout" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/til_email"
+                    style="@style/LoginTextInputLayoutStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint=""
+                    android:theme="@style/LoginTextInputLayoutStyle"
+                    app2:layout_constraintEnd_toEndOf="parent"
+                    app2:layout_constraintStart_toStartOf="parent">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/edt_email"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:backgroundTint="?attr/color_text"
+                        android:ems="10"
+                        android:textColor="?attr/colorPrimary"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/edt_id" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/title_payment"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="8dp"
+                android:fontFamily="sans-serif-light"
+                android:text="Payment Settings"
+                android:textAllCaps="true"
+                android:textColor="?attr/color_text"
+                android:textSize="24sp"
+                app2:layout_constraintEnd_toEndOf="parent"
+                app2:layout_constraintStart_toStartOf="parent"
+                app2:layout_constraintTop_toBottomOf="@+id/la_email" />
+
+
+            <LinearLayout
+                android:id="@+id/la_bitcoin"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:orientation="vertical"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
+                app2:layout_constraintEnd_toEndOf="parent"
+                app2:layout_constraintHorizontal_bias="1.0"
+                app2:layout_constraintStart_toStartOf="parent"
+                app2:layout_constraintTop_toBottomOf="@+id/title_payment">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:text="Bitcoin Address"
+                    android:textColor="?attr/color_text"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    app2:layout_constraintEnd_toEndOf="parent"
+                    app2:layout_constraintStart_toStartOf="parent"
+                    app2:layout_constraintTop_toBottomOf="@+id/textInputLayout" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/til_bitcoin"
+                    style="@style/LoginTextInputLayoutStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint=""
+                    android:theme="@style/LoginTextInputLayoutStyle"
+                    app2:layout_constraintEnd_toEndOf="parent"
+                    app2:layout_constraintStart_toStartOf="parent">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/edt_bitcoin"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:backgroundTint="?attr/color_text"
+                        android:ems="10"
+                        android:textColor="?attr/colorPrimary"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/edt_id" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/la_paypal"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:orientation="vertical"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
+                app2:layout_constraintEnd_toEndOf="parent"
+                app2:layout_constraintHorizontal_bias="0.0"
+                app2:layout_constraintStart_toStartOf="parent"
+                app2:layout_constraintTop_toBottomOf="@+id/la_bitcoin">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:text="Paypal Address"
+                    android:textColor="?attr/color_text"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    app2:layout_constraintEnd_toEndOf="parent"
+                    app2:layout_constraintStart_toStartOf="parent"
+                    app2:layout_constraintTop_toBottomOf="@+id/textInputLayout" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/til_paypal"
+                    style="@style/LoginTextInputLayoutStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint=""
+                    android:theme="@style/LoginTextInputLayoutStyle"
+                    app2:layout_constraintEnd_toEndOf="parent"
+                    app2:layout_constraintStart_toStartOf="parent"
+
+                    >
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/edt_paypal"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:backgroundTint="?attr/color_text"
+                        android:ems="10"
+                        android:textColor="?attr/colorPrimary"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/edt_id" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+
+            </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+
+    <ScrollView
+        android:id="@+id/sv_settingsapp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        app2:layout_constraintEnd_toEndOf="parent"
+        app2:layout_constraintStart_toStartOf="parent"
+        app2:layout_constraintTop_toBottomOf="@+id/title_account2">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@id/constraintLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            app2:layout_constraintTop_toBottomOf="@+id/title">
+
+            <TextView
+                android:id="@+id/info"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:fontFamily="sans-serif-light"
+                android:text="Informazioni su XDA Labs Console"
+                android:textAllCaps="false"
+                android:textColor="?attr/color_text"
+                android:textStyle="bold"
+                app2:layout_constraintEnd_toEndOf="parent"
+                app2:layout_constraintStart_toStartOf="parent"
+                app2:layout_constraintTop_toTopOf="parent" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_save"
+        style="@style/Widget.MaterialComponents.Button.TextButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:text="Save"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:textColor="@color/colorPrimary"
+        app2:layout_constraintEnd_toEndOf="parent"
+        app2:layout_constraintTop_toBottomOf="@+id/sv_settingsaccount"
+        app:strokeColor="@color/colorPrimary" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

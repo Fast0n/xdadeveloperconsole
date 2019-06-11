@@ -1,0 +1,69 @@
+<resources>
+
+
+    <!-- Base application theme. -->
+    <!-- Light/Day Mode Theme -->
+    <style name="AppTheme" parent="Theme.MaterialComponents.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">#000</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="windowNoTitle">true</item>
+
+        <item name="android:statusBarColor">#F1F1F1</item>
+        <item name="android:windowLightStatusBar">true</item>
+
+
+        <item name="color_background">#F1F1F1</item>
+        <item name="color_text">#000</item>
+        <item name="color_desc">#fff</item>
+        <item name="color_toolbar">#c00</item>
+        <item name="color_object">#000</item>
+
+
+    </style>
+
+    <!-- Night/Dark Mode Theme -->
+    <style name="DarkTheme" parent="Theme.MaterialComponents.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">#212121</item>
+        <item name="colorAccent">#3e4855</item>
+        <item name="windowNoTitle">true</item>
+
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:statusBarColor">#2B2B2B</item>
+        <item name="color_background">#2B2B2B</item>
+        <item name="color_text">#fff</item>
+        <item name="color_desc">#fff</item>
+        <item name="color_toolbar">#141414</item>
+        <item name="color_object">#2B2B2B</item>
+
+    </style>
+
+
+    <style name="LoginTextInputLayoutStyle" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
+        <item name="colorAccent">@color/colorPrimary</item>
+        <item name="colorControlNormal">@color/colorPrimary</item>
+        <item name="colorControlActivated">@color/colorPrimary</item>
+        <item name="colorControlHighlight">@color/colorPrimary</item>
+        <item name="android:textColorHint">@color/colorPrimary</item>
+        <item name="android:textColor">@color/colorPrimary</item>
+    </style>
+
+
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+    </style>
+
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="AppTheme.NoActionBar.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppTheme.NoActionBar.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+
+</resources>
