@@ -1,6 +1,5 @@
 from flask import Flask, request, jsonify
 import xda
-from urllib.parse import urlparse, parse_qs
 
 
 app = Flask(__name__)
@@ -9,10 +8,6 @@ app = Flask(__name__)
 def login():
     username = request.args.get("username")
     password = request.args.get("password")
-    # key = request.args.get("key").replace(" ", "+")
-
-    # bbpassword = 3cb781756feab89c0d33c38ccd442469
-    # bbuserid = 5567890
 
     if not username and not password:
         cookies = request.args.to_dict()
@@ -94,4 +89,4 @@ def get_app():
 
 if __name__ == "__main__":
     xda.create_keys()
-    app.run(debug=True,  host="0.0.0.0")
+    app.run(debug=True,  host="0.0.0.0", port=1337)

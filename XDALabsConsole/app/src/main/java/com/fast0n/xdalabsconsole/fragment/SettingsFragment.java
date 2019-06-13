@@ -68,9 +68,6 @@ public class SettingsFragment extends Fragment {
 
         String checkSessionUrl = String.format("%s/settings?sessionid=%s", domain, sessionid);
 
-
-
-
         try {
             if (isOnline()) {
                 settings(view, checkSessionUrl, 0);
@@ -138,20 +135,7 @@ public class SettingsFragment extends Fragment {
 
     private void settings(View view, String url, int i){
 
-
-
-
-
-
-
-
-
         if (i == 1) {
-
-
-
-
-
             try {
 
                 String jsonCredit = PreferenceManager.
@@ -189,7 +173,6 @@ public class SettingsFragment extends Fragment {
 
         }
         else {
-
 
             RequestQueue queue = Volley.newRequestQueue(context);
             queue.getCache().clear();

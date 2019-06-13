@@ -60,13 +60,9 @@ class PyQL:
     def __check_raw(self, key, value):
         return key == "raw" and isinstance(value, tuple)
 
-    def __condition(self, conditions, Not=False):
+    def __condition(self, conditions):
         if conditions:
-            if Not:
-                condition = " WHERE NOT "
-            else:
-                condition = " WHERE "
-
+            condition = " WHERE "
             for key, value in conditions.items():
 
                 if self.__check_raw(key, value):
@@ -102,27 +98,40 @@ class PyQL:
 
         return condition
 
-    def create_table(self, table, exist=False, **kargs):
+    def create_table(self, table, *args, **kwargs):
         conn = sqlite3.connect(self.db_name)
         cursor = conn.cursor()
 
-        if exist: exist = "IF NOT EXISTS"
-        else: exist = ""
-
         campi = ""
-        for key, value in kargs.items():
-            campi += f"{key} "
-            for k, v in value.items():
-                if isinstance(v, bool) and v:
-                    campi += f"{k} "
+
+        if kwargs.items():
+            for key, value in kwargs.items():
+                campi += f"{key} "
+                for k, v in value.items():
+                    if isinstance(v, bool) and v:
+                        campi += f"{k} "
+                    else:
+                        campi += f"{k}({v}) "
                 else:
-                    campi += f"{k}({v}) "
-            else:
-                campi = f"{campi[:-1]}, "
+                    campi = f"{campi[:-1]}, "
         else:
             campi = f"{campi[:-2]}"
 
-        cursor.execute(f"CREATE TABLE {exist} {table} ({campi});")
+        if args:
+            for i, value in enumerate(args):
+                print(args)
+                if i == 0: campi += ", "
+                for k, v in value.items():
+                    if isinstance(v, bool) and v:
+                        campi += f"{k} "
+                    else:
+                        campi += f"{k}({v}) "
+                else:
+                    campi = f"{campi[:-1]}, "
+        else:
+            campi = f"{campi[:-2]}"
+
+        cursor.execute(f"CREATE TABLE {table} ({campi});")
         conn.commit()
         conn.close()
 
@@ -145,18 +154,25 @@ class PyQL:
         conn.close()
         return
 
-    def select(self, table, select="*", distinct=False, **conditions):
+    def select(self, select="*", *tables, **conditions):
 
         select = str(select).replace("'", "").replace("(", "").replace(")", "")
         conn = sqlite3.connect(self.db_name)
         cursor = conn.cursor()
 
-        if distinct: distinct = " DISTINCT"
-        else: distinct = ""
+        query_table = ""
+        for table in tables:
+            query_table += f"{table}, "
+        else:
+            query_table = query_table[:-2]
+
+
+        # if distinct: distinct = " DISTINCT"
+        # else: distinct = ""
 
         condition = self.__condition(conditions)
 
-        result = cursor.execute(f"SELECT{distinct} {select} FROM {table}{condition}").fetchall()
+        result = cursor.execute(f"SELECT {select} FROM {query_table}{condition}").fetchall()
         conn.close()
         return result
 

@@ -21,8 +21,7 @@ def encode(text, key):
 def create_keys():
     sql = PyQL("./keys.db")
     sql.create_table(
-        "keys",
-        exist=True,
+        "IF NOT EXISTS keys",
         id = {
             "INTEGER": True,
             "PRIMARY KEY": True
@@ -36,7 +35,7 @@ def create_keys():
             "NOT NULL": True
         }
     )
-    check = sql.select("keys")
+    check = sql.select("*", "keys")
 
     if not check:
 
@@ -63,8 +62,8 @@ def get_key(type="public", base_64=True):
     sql = PyQL("./keys.db")
 
     key = sql.select(
-        "keys",
-        f"{type}"
+        f"{type}",
+        "keys"
     )[0][0]
 
 
@@ -117,20 +116,19 @@ def dashboard(sessionid):
 
     soup = BeautifulSoup(response, "html.parser")
 
-    container = soup.find_all("div", {"class": "col-md-8"})[0]
-    rows = container.find_all("div", {"class": "col-md-4"})
+    elements = soup.find_all("div", {"class": "col-md-4"})
 
-    apps = rows[0].find("div", {"class": "tile-content-wrapper"}).get_text().strip()
-    downloads = str(int(rows[1].find("div", {"class": "tile-content-wrapper"}).get_text().strip()) - 1)
-    balance = rows[2].find("div", {"class": "tile-content-wrapper"}).get_text().strip().split('\n')[0]
+    result = {"dashboard": []}
 
-    data = {
-        "apps": apps,
-        "downloads": downloads,
-        "balance": balance
-    }
+    for element in elements:
+        name = element.find("div", {"class": "tile-header"}).get_text().strip()
+        value = element.find("div", {"class": "tile-content-wrapper"}).get_text().replace("\n", "").replace(" ", "").strip()
+        result["dashboard"].append({
+            "name": name,
+            "value": value
+        })
 
-    return data
+    return result
 
 def settings(sessionid):
     """ function to get settings information """
