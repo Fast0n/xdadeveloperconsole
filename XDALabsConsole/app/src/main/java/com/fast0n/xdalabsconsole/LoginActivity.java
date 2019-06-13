@@ -1,10 +1,12 @@
 package com.fast0n.xdalabsconsole;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -18,10 +20,9 @@ import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
-
-import com.fast0n.xdalabsconsole.Classes.B64;
-import com.fast0n.xdalabsconsole.Classes.RSA;
-
+import com.fast0n.xdalabsconsole.classes.B64;
+import com.fast0n.xdalabsconsole.classes.RSA;
+import com.fast0n.xdalabsconsole.java.SnackbarHelper;
 import com.google.android.material.snackbar.Snackbar;
 import com.victor.loading.rotate.RotateLoading;
 
@@ -33,11 +34,11 @@ public class LoginActivity extends AppCompatActivity {
     Context context = LoginActivity.this;
 
     B64 B64 = new B64();
-
     String domain;
-
     SharedPreferences settings;
     SharedPreferences.Editor editor;
+
+    Snackbar snack;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +49,6 @@ public class LoginActivity extends AppCompatActivity {
         domain = getResources().getString(R.string.url);
 
 
-
         // get theme
         String theme = settings.getString("toggleTheme", null);
 
@@ -56,8 +56,7 @@ public class LoginActivity extends AppCompatActivity {
         if (theme == null) {
             editor.putString("toggleTheme", "0");
             editor.apply();
-        }
-        else if (theme.equals("0"))
+        } else if (theme.equals("0"))
             setTheme(R.style.AppTheme);
         else
             setTheme(R.style.DarkTheme);
@@ -75,7 +74,7 @@ public class LoginActivity extends AppCompatActivity {
 
         // check session id
         String sessionId = settings.getString("sessionid", null);
-        if (sessionId != null){
+        if (sessionId != null) {
             // get invisible element for animation
             loginCard.setVisibility(View.INVISIBLE);
             forgotPassword.setVisibility(View.INVISIBLE);
@@ -101,6 +100,9 @@ public class LoginActivity extends AppCompatActivity {
                 btn_login.setVisibility(View.INVISIBLE);
 
                 // TODO: get keyboard down :)
+                InputMethodManager imm = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
+                assert imm != null;
+                imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
 
                 // start animation
                 rotateloading.start();
@@ -118,7 +120,7 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
-    private void login(View view, String url){
+    private void login(View view, String url) {
 
         RequestQueue queue = Volley.newRequestQueue(context);
         queue.getCache().clear();
@@ -134,7 +136,7 @@ public class LoginActivity extends AppCompatActivity {
                             editor.apply();
                             // activity change
                             startActivity(new Intent(LoginActivity.this, HomeActivity.class));
-                        } else{
+                        } else {
                             // get error message
                             JSONObject error = response.getJSONObject("error");
                             String message = error.getString("message");
@@ -146,7 +148,7 @@ public class LoginActivity extends AppCompatActivity {
 
                     } catch (JSONException e) {
 
-                        Snackbar snack = Snackbar.make(
+                        snack = Snackbar.make(
                                 view,
                                 "API error",
                                 Snackbar.LENGTH_LONG
@@ -157,13 +159,13 @@ public class LoginActivity extends AppCompatActivity {
 
                 }, e -> {
 
-                    Snackbar snack = Snackbar.make(
-                            view,
-                            "API error",
-                            Snackbar.LENGTH_LONG
-                    );
-                    SnackbarHelper.configSnackbar(view.getContext(), snack);
-                    snack.show();
+            snack = Snackbar.make(
+                    view,
+                    "API error",
+                    Snackbar.LENGTH_LONG
+            );
+            SnackbarHelper.configSnackbar(view.getContext(), snack);
+            snack.show();
 
         });
 
@@ -188,7 +190,7 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
-    private void checkSessionId(View view, String url){
+    private void checkSessionId(View view, String url) {
 
         RequestQueue queue = Volley.newRequestQueue(context);
         queue.getCache().clear();
@@ -197,7 +199,7 @@ public class LoginActivity extends AppCompatActivity {
                     try {
                         // check key "success" exist
                         boolean result = response.getBoolean("success");
-                        if (result){
+                        if (result) {
 
                             // activity change
                             startActivity(new Intent(LoginActivity.this, HomeActivity.class));
@@ -213,9 +215,8 @@ public class LoginActivity extends AppCompatActivity {
                         }
 
 
-
                     } catch (JSONException e) {
-                        Snackbar snack = Snackbar.make(view,"API error", Snackbar.LENGTH_LONG);
+                        snack = Snackbar.make(view, "API error", Snackbar.LENGTH_LONG);
                         SnackbarHelper.configSnackbar(view.getContext(), snack);
                         snack.show();
                     }
@@ -223,7 +224,7 @@ public class LoginActivity extends AppCompatActivity {
 
                 },
                 e -> {
-                    Snackbar snack = Snackbar.make(view,"API error", Snackbar.LENGTH_LONG);
+                    snack = Snackbar.make(view, "API error", Snackbar.LENGTH_LONG);
                     SnackbarHelper.configSnackbar(view.getContext(), snack);
                     snack.show();
 
@@ -234,7 +235,7 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
-    private void updateSessionId(View view, String url){
+    private void updateSessionId(View view, String url) {
 
         RequestQueue queue = Volley.newRequestQueue(context);
         queue.getCache().clear();
@@ -250,10 +251,9 @@ public class LoginActivity extends AppCompatActivity {
                         startActivity(new Intent(LoginActivity.this, HomeActivity.class));
 
 
-
                     } catch (JSONException e) {
 
-                        Snackbar snack = Snackbar.make(
+                        snack = Snackbar.make(
                                 view,
                                 "API error",
                                 Snackbar.LENGTH_LONG
@@ -264,25 +264,30 @@ public class LoginActivity extends AppCompatActivity {
 
                 }, e -> {
 
-                    Snackbar snack = Snackbar.make(
-                            view,
-                            "API error",
-                            Snackbar.LENGTH_LONG
-                    );
-                    SnackbarHelper.configSnackbar(view.getContext(), snack);
-                    snack.show();
+            snack = Snackbar.make(
+                    view,
+                    "API error",
+                    Snackbar.LENGTH_LONG
+            );
+            SnackbarHelper.configSnackbar(view.getContext(), snack);
+            snack.show();
 
-                });
+        });
 
         getRequest.setRetryPolicy(new RetryPolicy() {
             @Override
-            public int getCurrentTimeout() { return 50000; }
+            public int getCurrentTimeout() {
+                return 50000;
+            }
 
             @Override
-            public int getCurrentRetryCount() { return 50000; }
+            public int getCurrentRetryCount() {
+                return 50000;
+            }
 
             @Override
-            public void retry(VolleyError error) {}
+            public void retry(VolleyError error) {
+            }
         });
 
         queue.add(getRequest);
@@ -291,7 +296,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private void getKey(View view, String username, final String password) {
 
-        String url = domain +  "/get_key";
+        String url = domain + "/get_key";
 
         RequestQueue queue = Volley.newRequestQueue(context);
         queue.getCache().clear();
@@ -319,14 +324,14 @@ public class LoginActivity extends AppCompatActivity {
 
                     } catch (Exception e) {
 
-                        Snackbar snack = Snackbar.make(view,"API error", Snackbar.LENGTH_LONG);
+                        Snackbar snack = Snackbar.make(view, "API error", Snackbar.LENGTH_LONG);
                         SnackbarHelper.configSnackbar(view.getContext(), snack);
                         snack.show();
                     }
 
                 },
                 e -> {
-                    Snackbar snack = Snackbar.make(
+                    snack = Snackbar.make(
                             view,
                             "API error",
                             Snackbar.LENGTH_LONG

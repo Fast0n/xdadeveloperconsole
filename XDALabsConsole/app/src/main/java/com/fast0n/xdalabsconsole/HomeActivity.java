@@ -10,6 +10,10 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
+import com.fast0n.xdalabsconsole.fragment.AppsFragment;
+import com.fast0n.xdalabsconsole.fragment.ManagerFragment.ManageFragment;
+import com.fast0n.xdalabsconsole.fragment.SettingsFragment;
+import com.fast0n.xdalabsconsole.fragment.XposedFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class HomeActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
@@ -81,5 +85,12 @@ public class HomeActivity extends AppCompatActivity implements BottomNavigationV
 
 
         return loadFragment(fragment);
+    }
+
+
+
+    public void onBackPressed() {
+        finishAffinity();
+        System.exit(0);
     }
 }

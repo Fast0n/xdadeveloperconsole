@@ -1,5 +1,5 @@
 <resources>
-    <string name="url">https://9e51a60e.ngrok.io</string>
+    <string name="url">http://51.158.173.57:1337</string>
     
     <string name="app_name">XDA Labs Console</string>
     <string name="title_activity_login">LoginActivity</string>

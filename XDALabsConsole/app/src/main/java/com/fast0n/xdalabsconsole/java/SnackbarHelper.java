@@ -1,4 +1,4 @@
-package com.fast0n.xdalabsconsole;
+package com.fast0n.xdalabsconsole.java;
 
 
 import android.content.Context;
@@ -6,7 +6,7 @@ import android.content.Context;
 import android.view.ViewGroup;
 
 
-
+import com.fast0n.xdalabsconsole.R;
 import com.google.android.material.snackbar.Snackbar;
 
 public class SnackbarHelper {

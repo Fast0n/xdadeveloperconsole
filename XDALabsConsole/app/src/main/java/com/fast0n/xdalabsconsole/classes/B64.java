@@ -1,4 +1,4 @@
-package com.fast0n.xdalabsconsole.Classes;
+package com.fast0n.xdalabsconsole.classes;
 
 import android.util.Base64;
 
