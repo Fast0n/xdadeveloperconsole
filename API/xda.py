@@ -120,13 +120,18 @@ def dashboard(sessionid):
 
     result = {"dashboard": []}
 
-    for element in elements:
+    for i, element in enumerate(elements):
         name = element.find("div", {"class": "tile-header"}).get_text().strip()
         value = element.find("div", {"class": "tile-content-wrapper"}).get_text().replace("\n", "").replace(" ", "").strip()
+        color = "#2ecc71"
+        if i == 1: color = "#3498db"
+        if i == 2: color = "#e67e22"
         result["dashboard"].append({
             "name": name,
-            "value": value
+            "value": value,
+            "color": color
         })
+
 
     return result
 
