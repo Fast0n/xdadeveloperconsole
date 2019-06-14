@@ -10,7 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
-import com.fast0n.xdalabsconsole.fragment.AppsFragment;
+import com.fast0n.xdalabsconsole.fragment.AppsFragment.AppsFragment;
 import com.fast0n.xdalabsconsole.fragment.ManagerFragment.ManageFragment;
 import com.fast0n.xdalabsconsole.fragment.SettingsFragment;
 import com.fast0n.xdalabsconsole.fragment.XposedFragment;
@@ -86,7 +86,6 @@ public class HomeActivity extends AppCompatActivity implements BottomNavigationV
 
         return loadFragment(fragment);
     }
-
 
 
     public void onBackPressed() {

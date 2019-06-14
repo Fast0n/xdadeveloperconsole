@@ -79,9 +79,6 @@ public class SettingsFragment extends Fragment {
         }
 
 
-
-
-
         btn_save.setOnClickListener(view1 -> {
 
             String name = edt_name.getText().toString();
@@ -119,7 +116,6 @@ public class SettingsFragment extends Fragment {
             snack.show();
 
 
-
         });
 
 
@@ -133,15 +129,15 @@ public class SettingsFragment extends Fragment {
     }
 
 
-    private void settings(View view, String url, int i){
+    private void settings(View view, String url, int i) {
 
         if (i == 1) {
             try {
 
-                String jsonCredit = PreferenceManager.
+                String jsonSettings = PreferenceManager.
                         getDefaultSharedPreferences(view.getContext()).getString("settings", null);
 
-                JSONObject response = new JSONObject(jsonCredit);
+                JSONObject response = new JSONObject(jsonSettings);
 
 
                 // get json values
@@ -171,8 +167,7 @@ public class SettingsFragment extends Fragment {
             }
 
 
-        }
-        else {
+        } else {
 
             RequestQueue queue = Volley.newRequestQueue(context);
             queue.getCache().clear();

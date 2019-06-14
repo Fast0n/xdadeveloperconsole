@@ -1,15 +1,15 @@
 package com.fast0n.xdalabsconsole.fragment.ManagerFragment;
 
-public class DataItems {
+public class DataDashboard {
 
     private String title;
     private String value;
-    private String url;
+    private String color;
 
-    DataItems(String title, String value, String url) {
+    DataDashboard(String title, String value, String color) {
         this.title = title;
         this.value = value;
-        this.url = url;
+        this.color = color;
 
     }
 
@@ -21,8 +21,8 @@ public class DataItems {
         return value;
     }
 
-    String getUrl() {
-        return url;
+    String getColor() {
+        return color;
     }
 
 }

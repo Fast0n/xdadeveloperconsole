@@ -24,7 +24,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.02"
-        card_view:cardBackgroundColor="?attr/color_object"
+        card_view:cardBackgroundColor="?attr/color_toolbar"
         card_view:cardCornerRadius="5dp"
         card_view:cardElevation="2dp">
 
@@ -39,73 +39,48 @@
                 android:id="@+id/value"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginEnd="8dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="16dp"
                 android:paddingTop="5dp"
-                android:text="53"
+                android:text="1"
+                android:textAlignment="center"
                 android:textAllCaps="true"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textColor="?attr/color_text"
-                android:textStyle="bold"
-                card_view:layout_constraintEnd_toStartOf="@+id/btnOpenURL"
-                card_view:layout_constraintHorizontal_bias="0.026"
+                android:textColor="#fff"
+
+                card_view:layout_constraintBottom_toBottomOf="parent"
+                card_view:layout_constraintEnd_toEndOf="parent"
                 card_view:layout_constraintStart_toStartOf="parent"
                 card_view:layout_constraintTop_toBottomOf="@+id/title" />
 
 
             <TextView
-                android:id="@+id/url_link"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginBottom="8dp"
-                android:paddingTop="5dp"
-                android:textAllCaps="true"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textColor="?attr/color_text"
-                android:textStyle="bold"
-                android:visibility="gone"
-                card_view:layout_constraintBottom_toBottomOf="parent"
-                card_view:layout_constraintEnd_toStartOf="@+id/btnOpenURL"
-                card_view:layout_constraintHorizontal_bias="1.0"
-                card_view:layout_constraintStart_toStartOf="parent" />
-
-            <TextView
                 android:id="@+id/title"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="8dp"
-                android:paddingTop="5dp"
+                android:background="#40ffffff"
+                android:padding="5dp"
                 android:scaleType="center"
-                android:text="..."
+                android:text="APPS"
+                android:textAlignment="center"
                 android:textAllCaps="true"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textColor="?attr/color_text"
+                android:textColor="#fff"
                 android:textStyle="bold"
                 card_view:layout_constraintBottom_toTopOf="@+id/value"
-                card_view:layout_constraintEnd_toStartOf="@+id/btnOpenURL"
+                card_view:layout_constraintEnd_toEndOf="parent"
                 card_view:layout_constraintStart_toStartOf="parent"
                 card_view:layout_constraintTop_toTopOf="parent" />
 
-
-            <Button
-                android:id="@+id/btnOpenURL"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            <TextView
+                android:id="@+id/color"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginBottom="8dp"
-                android:text="apri"
-                android:textColor="@color/colorPrimary"
-                app:strokeColor="@color/colorPrimary"
-                card_view:layout_constraintBottom_toBottomOf="parent"
-                card_view:layout_constraintEnd_toEndOf="parent"
-                card_view:layout_constraintTop_toTopOf="parent"
-                card_view:layout_constraintVertical_bias="0.589" />
+                android:layout_marginStart="8dp"
+                android:text="TextView"
+                android:visibility="gone"
+                app:layout_editor_absoluteY="64dp"
+                card_view:layout_constraintStart_toStartOf="parent" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,4 +1,4 @@
-package com.fast0n.xdalabsconsole.fragment.ManagerFragment;
+package com.fast0n.xdalabsconsole.fragment.AppsFragment;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -6,19 +6,21 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.cardview.widget.CardView;
 
+import com.bumptech.glide.Glide;
 import com.fast0n.xdalabsconsole.R;
 
 import java.util.ArrayList;
 
-public class CustomAdapterManagerFragment extends ArrayAdapter<DataDashboard> {
+public class CustomAdapterAppsFragment extends ArrayAdapter<DataApps> {
 
     private Context context;
 
-    CustomAdapterManagerFragment(Context context, ArrayList<DataDashboard> data) {
+    CustomAdapterAppsFragment(Context context, ArrayList<DataApps> data) {
         super(context, R.layout.row_dashboard, data);
         this.context = context;
 
@@ -27,7 +29,7 @@ public class CustomAdapterManagerFragment extends ArrayAdapter<DataDashboard> {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         // Get the data item for this position
-        DataDashboard dataItems = getItem(position);
+        DataApps dataItems = getItem(position);
         // Check if an existing view is being reused, otherwise inflate the view
         ViewHolder viewHolder;
 
@@ -36,12 +38,12 @@ public class CustomAdapterManagerFragment extends ArrayAdapter<DataDashboard> {
             viewHolder = new ViewHolder();
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             assert inflater != null;
-            convertView = inflater.inflate(R.layout.row_dashboard, parent, false);
+            convertView = inflater.inflate(R.layout.row_apps, parent, false);
 
 
             // addressed
             viewHolder.txtTitle = convertView.findViewById(R.id.title);
-            viewHolder.txtValue = convertView.findViewById(R.id.value);
+            viewHolder.ivImg = convertView.findViewById(R.id.img);
             viewHolder.txtColor = convertView.findViewById(R.id.color);
             viewHolder.cardView = convertView.findViewById(R.id.cardView);
 
@@ -51,7 +53,7 @@ public class CustomAdapterManagerFragment extends ArrayAdapter<DataDashboard> {
             viewHolder = (ViewHolder) convertView.getTag();
 
 
-        viewHolder.txtValue.setText(dataItems.getValue());
+        Glide.with(context).load(dataItems.getImg()).into(viewHolder.ivImg);
         viewHolder.txtTitle.setText(dataItems.getTitle());
         viewHolder.txtColor.setText(dataItems.getColor());
         viewHolder.cardView.setCardBackgroundColor(Color.parseColor(viewHolder.txtColor.getText().toString()));
@@ -61,8 +63,9 @@ public class CustomAdapterManagerFragment extends ArrayAdapter<DataDashboard> {
     }
 
     private static class ViewHolder {
-        TextView txtTitle, txtValue, txtColor;
+        TextView txtTitle, txtColor;
         CardView cardView;
+        ImageView ivImg;
     }
 }
 

@@ -1,4 +1,5 @@
-package com.fast0n.xdalabsconsole.fragment.ManagerFragment;
+package com.fast0n.xdalabsconsole.fragment.AppsFragment;
+
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -31,23 +32,23 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-public class ManageFragment extends Fragment {
+public class AppsFragment extends Fragment {
 
     Context context;
 
-    CustomAdapterManagerFragment adapter;
+    CustomAdapterAppsFragment adapter;
     SharedPreferences settings;
     String domain;
     String sessionid;
     ListView listView;
     Snackbar snack;
     Handler handler = new Handler();
-    ArrayList<DataDashboard> dataHours;
+    ArrayList<DataApps> dataHours;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_manager, container, false);
+        View view = inflater.inflate(R.layout.fragment_apps, container, false);
 
         context = getActivity().getApplicationContext();
         domain = getResources().getString(R.string.url);
@@ -58,7 +59,7 @@ public class ManageFragment extends Fragment {
 
         sessionid = settings.getString("sessionid", null);
 
-        String url = String.format("%s/dashboard?sessionid=%s", domain, sessionid);
+        String url = String.format("%s/apps?sessionid=%s", domain, sessionid);
 
 
         try {
@@ -97,23 +98,23 @@ public class ManageFragment extends Fragment {
 
         if (i == 1) {
             try {
-                String jsonDashboard = PreferenceManager.
-                        getDefaultSharedPreferences(view.getContext()).getString("dashboard", null);
+                String jsonApps = PreferenceManager.
+                        getDefaultSharedPreferences(view.getContext()).getString("apps", null);
 
-                JSONObject response = new JSONObject(jsonDashboard);
+                JSONObject response = new JSONObject(jsonApps);
 
-                JSONArray array = response.getJSONArray("dashboard");
+                JSONArray array = response.getJSONArray("apps");
 
                 int n = array.length();
 
                 for (int j = 0; j < n; j++) {
                     String name = array.getJSONObject(j).getString("name");
-                    String value = array.getJSONObject(j).getString("value");
+                    String value = array.getJSONObject(j).getString("img");
                     String color = array.getJSONObject(j).getString("color");
-                    dataHours.add(new DataDashboard(name, value, color));
+                    dataHours.add(new DataApps(name, value, color));
                 }
 
-                adapter = new CustomAdapterManagerFragment(view.getContext(), dataHours);
+                adapter = new CustomAdapterAppsFragment(view.getContext(), dataHours);
                 listView.setAdapter(adapter);
             } catch (JSONException e) {
 
@@ -133,25 +134,25 @@ public class ManageFragment extends Fragment {
                         try {
 
                             PreferenceManager.getDefaultSharedPreferences(view.getContext()).edit()
-                                    .remove("dashboard").apply();
+                                    .remove("apps").apply();
 
 
                             PreferenceManager.getDefaultSharedPreferences(view.getContext()).edit()
-                                    .putString("dashboard", response.toString()).apply();
+                                    .putString("apps", response.toString()).apply();
 
 
-                            JSONArray array = response.getJSONArray("dashboard");
+                            JSONArray array = response.getJSONArray("apps");
 
                             int n = array.length();
 
                             for (int j = 0; j < n; j++) {
                                 String name = array.getJSONObject(j).getString("name");
-                                String value = array.getJSONObject(j).getString("value");
+                                String value = array.getJSONObject(j).getString("img");
                                 String color = array.getJSONObject(j).getString("color");
-                                dataHours.add(new DataDashboard(name, value, color));
+                                dataHours.add(new DataApps(name, value, color));
                             }
 
-                            adapter = new CustomAdapterManagerFragment(view.getContext(), dataHours);
+                            adapter = new CustomAdapterAppsFragment(view.getContext(), dataHours);
                             listView.setAdapter(adapter);
 
                         } catch (JSONException e) {
