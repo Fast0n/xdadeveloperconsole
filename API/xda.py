@@ -122,7 +122,7 @@ def dashboard(sessionid):
 
     for i, element in enumerate(elements):
         name = element.find("div", {"class": "tile-header"}).get_text().strip()
-        value = element.find("div", {"class": "tile-content-wrapper"}).get_text().replace("\n", "").replace(" ", "").strip()
+        value = element.find("div", {"class": "tile-content-wrapper"}).get_text().replace(" ", "").replace("\n", " ").strip()
         color = "#2ecc71"
         if i == 1: color = "#3498db"
         if i == 2: color = "#e67e22"
@@ -144,12 +144,19 @@ def settings(sessionid):
 
     soup = BeautifulSoup(response, "html.parser")
 
-    inputs = soup.find_all("input", {"type": ["text", "email", "hidden"]})
+    groups = soup.find_all("div", {"class": "form-group"})
 
-    for input in inputs:
+    for group in groups:
+        input = group.find("input")
         camp = input.get("name")
         data[camp] = {}
         data[camp]["value"] = input.get("value")
+        if group.find("div", {"class": "alert"}):
+            data[camp]["alert"] = group.find("div", {"class": "alert"}).get_text().strip()
+
+    csrf = soup.find("input", {"type": ["hidden"]})
+    data[csrf.get("name")] = {}
+    data[csrf.get("name")]["value"] = csrf.get("value")
 
     return data
 

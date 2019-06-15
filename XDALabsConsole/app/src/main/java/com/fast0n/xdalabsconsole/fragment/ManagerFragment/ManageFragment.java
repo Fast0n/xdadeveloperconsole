@@ -42,7 +42,7 @@ public class ManageFragment extends Fragment {
     ListView listView;
     Snackbar snack;
     Handler handler = new Handler();
-    ArrayList<DataDashboard> dataHours;
+    ArrayList<DataDashboard> dataDashboard;
 
     @Nullable
     @Override
@@ -54,7 +54,7 @@ public class ManageFragment extends Fragment {
         settings = context.getSharedPreferences("sharedPreferences", 0);
 
         listView = view.findViewById(R.id.list);
-        dataHours = new ArrayList<>();
+        dataDashboard = new ArrayList<>();
 
         sessionid = settings.getString("sessionid", null);
 
@@ -68,13 +68,6 @@ public class ManageFragment extends Fragment {
                     adapter.clear();
                     adapter.notifyDataSetChanged();
                     getDashbord(view, url, 0);
-                    snack = Snackbar.make(
-                            view,
-                            "Lista aggiornata",
-                            Snackbar.LENGTH_LONG
-                    );
-                    SnackbarHelper.configSnackbar(view.getContext(), snack);
-                    snack.show();
                 }, 1000);
 
 
@@ -110,10 +103,10 @@ public class ManageFragment extends Fragment {
                     String name = array.getJSONObject(j).getString("name");
                     String value = array.getJSONObject(j).getString("value");
                     String color = array.getJSONObject(j).getString("color");
-                    dataHours.add(new DataDashboard(name, value, color));
+                    dataDashboard.add(new DataDashboard(name, value, color));
                 }
 
-                adapter = new CustomAdapterManagerFragment(view.getContext(), dataHours);
+                adapter = new CustomAdapterManagerFragment(view.getContext(), dataDashboard);
                 listView.setAdapter(adapter);
             } catch (JSONException e) {
 
@@ -148,10 +141,10 @@ public class ManageFragment extends Fragment {
                                 String name = array.getJSONObject(j).getString("name");
                                 String value = array.getJSONObject(j).getString("value");
                                 String color = array.getJSONObject(j).getString("color");
-                                dataHours.add(new DataDashboard(name, value, color));
+                                dataDashboard.add(new DataDashboard(name, value, color));
                             }
 
-                            adapter = new CustomAdapterManagerFragment(view.getContext(), dataHours);
+                            adapter = new CustomAdapterManagerFragment(view.getContext(), dataDashboard);
                             listView.setAdapter(adapter);
 
                         } catch (JSONException e) {

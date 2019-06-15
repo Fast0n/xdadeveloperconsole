@@ -27,6 +27,8 @@ public class DataApps {
         return color;
     }
 
-    String getId() { return id; }
+    String getId() {
+        return id;
+    }
 
 }

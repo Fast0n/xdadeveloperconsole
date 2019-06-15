@@ -37,7 +37,6 @@ public class LoginActivity extends AppCompatActivity {
     String domain;
     SharedPreferences settings;
     SharedPreferences.Editor editor;
-
     Snackbar snack;
 
     @Override
@@ -54,8 +53,9 @@ public class LoginActivity extends AppCompatActivity {
 
         // check theme
         if (theme == null) {
-            editor.putString("toggleTheme", "0");
+            editor.putString("toggleTheme", "1");
             editor.apply();
+            setTheme(R.style.DarkTheme);
         } else if (theme.equals("0"))
             setTheme(R.style.AppTheme);
         else

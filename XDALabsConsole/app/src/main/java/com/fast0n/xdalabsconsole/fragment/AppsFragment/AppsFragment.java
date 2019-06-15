@@ -43,7 +43,7 @@ public class AppsFragment extends Fragment {
     ListView listView;
     Snackbar snack;
     Handler handler = new Handler();
-    ArrayList<DataApps> dataHours;
+    ArrayList<DataApps> dataApps;
 
     @Nullable
     @Override
@@ -55,7 +55,7 @@ public class AppsFragment extends Fragment {
         settings = context.getSharedPreferences("sharedPreferences", 0);
 
         listView = view.findViewById(R.id.list);
-        dataHours = new ArrayList<>();
+        dataApps = new ArrayList<>();
 
         sessionid = settings.getString("sessionid", null);
 
@@ -64,26 +64,18 @@ public class AppsFragment extends Fragment {
 
         try {
 
-            getDashbord(view, url, 1);
+            getApp(view, url, 1);
 
             if (isOnline())
                 handler.postDelayed(() -> {
                     adapter.clear();
                     adapter.notifyDataSetChanged();
-                    getDashbord(view, url, 0);
-                    snack = Snackbar.make(
-                            view,
-                            "Lista aggiornata",
-                            Snackbar.LENGTH_LONG
-                    );
-                    SnackbarHelper.configSnackbar(view.getContext(), snack);
-                    snack.show();
+                    getApp(view, url, 0);
                 }, 1000);
 
 
-
         } catch (Exception e) {
-            getDashbord(view, url, 0);
+            getApp(view, url, 0);
         }
 
         return view;
@@ -95,7 +87,7 @@ public class AppsFragment extends Fragment {
                 && cm.getActiveNetworkInfo().isConnectedOrConnecting();
     }
 
-    private void getDashbord(View view, String url, int i) {
+    private void getApp(View view, String url, int i) {
 
         if (i == 1) {
             try {
@@ -112,10 +104,10 @@ public class AppsFragment extends Fragment {
                     String value = array.getJSONObject(j).getString("img");
                     String color = array.getJSONObject(j).getString("color");
                     String id = array.getJSONObject(j).getString("id");
-                    dataHours.add(new DataApps(name, value, color, id));
+                    dataApps.add(new DataApps(name, value, color, id));
                 }
 
-                adapter = new CustomAdapterAppsFragment(view.getContext(), dataHours);
+                adapter = new CustomAdapterAppsFragment(view.getContext(), dataApps);
 
                 listView.setAdapter(adapter);
 
@@ -154,10 +146,10 @@ public class AppsFragment extends Fragment {
                                 String color = array.getJSONObject(j).getString("color");
                                 String id = array.getJSONObject(j).getString("id");
 
-                                dataHours.add(new DataApps(name, img, color, id));
+                                dataApps.add(new DataApps(name, img, color, id));
                             }
 
-                            adapter = new CustomAdapterAppsFragment(view.getContext(), dataHours);
+                            adapter = new CustomAdapterAppsFragment(view.getContext(), dataApps);
 
                             listView.setAdapter(adapter); // Do not work
 

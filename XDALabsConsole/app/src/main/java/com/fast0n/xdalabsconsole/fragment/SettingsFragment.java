@@ -6,12 +6,14 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -32,19 +34,14 @@ import org.json.JSONObject;
 
 public class SettingsFragment extends Fragment {
 
+    String theme;
+    TextView info, title_developer2;
     private Context context;
-
     private SharedPreferences settings;
     private SharedPreferences.Editor editor;
-
     private String domain;
-
     // declare objects
-    private EditText edt_name;
-    private EditText edt_email;
-    private EditText edt_bitcoin;
-    private EditText edt_paypal;
-
+    private EditText edt_name, edt_email, edt_bitcoin, edt_paypal;
 
     @Nullable
     @Override
@@ -59,12 +56,46 @@ public class SettingsFragment extends Fragment {
 
         String sessionid = settings.getString("sessionid", null);
 
-        TextView info = view.findViewById(R.id.info);
         edt_name = view.findViewById(R.id.edt_name);
         edt_email = view.findViewById(R.id.edt_email);
         edt_bitcoin = view.findViewById(R.id.edt_bitcoin);
         edt_paypal = view.findViewById(R.id.edt_paypal);
+        info = view.findViewById(R.id.info);
+        title_developer2 = view.findViewById(R.id.title_developer2);
+
         Button btn_save = view.findViewById(R.id.btn_save);
+        Switch aSwitch = view.findViewById(R.id.switch1);
+
+        theme = settings.getString("toggleTheme", null);
+        if (theme.equals("0"))
+            aSwitch.setChecked(false);
+        else
+            aSwitch.setChecked(true);
+
+
+        Handler handler = new Handler();
+        final Runnable runnable = () -> {
+            getActivity().finish();
+            getActivity().overridePendingTransition(0, 0);
+            startActivity(getActivity().getIntent());
+            getActivity().overridePendingTransition(0, 0);
+
+        };
+
+
+        aSwitch.setOnCheckedChangeListener((compoundButton, b) -> {
+            if (b) {
+                editor.putString("toggleTheme", "1");
+                editor.apply();
+                handler.postDelayed(runnable, 500);
+            } else {
+                editor.putString("toggleTheme", "0");
+                editor.apply();
+                handler.postDelayed(runnable, 500);
+
+            }
+        });
+
 
         String checkSessionUrl = String.format("%s/settings?sessionid=%s", domain, sessionid);
 
@@ -152,6 +183,7 @@ public class SettingsFragment extends Fragment {
                 edt_email.setText(email.getString("value"));
                 edt_bitcoin.setText(bitcoin.getString("value"));
                 edt_paypal.setText(paypal.getString("value"));
+                title_developer2.setText(paypal.getString("alert"));
                 editor.putString("token", token.getString("value"));
                 editor.apply();
 
@@ -197,6 +229,8 @@ public class SettingsFragment extends Fragment {
                             edt_email.setText(email.getString("value"));
                             edt_bitcoin.setText(bitcoin.getString("value"));
                             edt_paypal.setText(paypal.getString("value"));
+                            title_developer2.setText(paypal.getString("alert"));
+
                             editor.putString("token", token.getString("value"));
                             editor.apply();
 

@@ -73,10 +73,6 @@ public class HomeActivity extends AppCompatActivity implements BottomNavigationV
                 break;
             case R.id.navigation_myapps:
                 fragment = new AppsFragment();
-
-                editor.putString("toggleTheme", "1");
-                editor.apply();
-
                 break;
             case R.id.navigation_xposed:
                 fragment = new XposedFragment();
