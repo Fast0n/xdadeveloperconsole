@@ -21,7 +21,7 @@ public class CustomAdapterAppsFragment extends ArrayAdapter<DataApps> {
     private Context context;
 
     CustomAdapterAppsFragment(Context context, ArrayList<DataApps> data) {
-        super(context, R.layout.row_dashboard, data);
+        super(context, R.layout.row_apps, data);
         this.context = context;
 
     }

@@ -198,6 +198,7 @@ def apps(sessionid):
         info["name"] = row.find("div", {"class": "tile-header"}).get_text().strip()
         info["img"] = row.find("img").get("src")
         info["id"] = row.find('a').get('href').split("/")[-1]
+        info["color"] = "#2ecc71"
         data["apps"].append(info)
 
     return data

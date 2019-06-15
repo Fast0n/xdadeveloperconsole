@@ -61,7 +61,7 @@ def change_settings():
 
     return jsonify(data)
 
-@app.route("/app")
+@app.route("/apps")
 def application():
     sessionid = request.args.get("sessionid")
 

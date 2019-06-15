@@ -63,8 +63,10 @@ public class AppsFragment extends Fragment {
 
 
         try {
-            if (isOnline()) {
-                getDashbord(view, url, 1);
+
+            getDashbord(view, url, 1);
+
+            if (isOnline())
                 handler.postDelayed(() -> {
                     adapter.clear();
                     adapter.notifyDataSetChanged();
@@ -79,8 +81,7 @@ public class AppsFragment extends Fragment {
                 }, 1000);
 
 
-            } else
-                getDashbord(view, url, 1);
+
         } catch (Exception e) {
             getDashbord(view, url, 0);
         }
@@ -98,8 +99,7 @@ public class AppsFragment extends Fragment {
 
         if (i == 1) {
             try {
-                String jsonApps = PreferenceManager.
-                        getDefaultSharedPreferences(view.getContext()).getString("apps", null);
+                String jsonApps = PreferenceManager.getDefaultSharedPreferences(view.getContext()).getString("apps", null);
 
                 JSONObject response = new JSONObject(jsonApps);
 
@@ -111,11 +111,14 @@ public class AppsFragment extends Fragment {
                     String name = array.getJSONObject(j).getString("name");
                     String value = array.getJSONObject(j).getString("img");
                     String color = array.getJSONObject(j).getString("color");
-                    dataHours.add(new DataApps(name, value, color));
+                    String id = array.getJSONObject(j).getString("id");
+                    dataHours.add(new DataApps(name, value, color, id));
                 }
 
                 adapter = new CustomAdapterAppsFragment(view.getContext(), dataHours);
+
                 listView.setAdapter(adapter);
+
             } catch (JSONException e) {
 
                 snack = Snackbar.make(
@@ -147,13 +150,16 @@ public class AppsFragment extends Fragment {
 
                             for (int j = 0; j < n; j++) {
                                 String name = array.getJSONObject(j).getString("name");
-                                String value = array.getJSONObject(j).getString("img");
+                                String img = array.getJSONObject(j).getString("img");
                                 String color = array.getJSONObject(j).getString("color");
-                                dataHours.add(new DataApps(name, value, color));
+                                String id = array.getJSONObject(j).getString("id");
+
+                                dataHours.add(new DataApps(name, img, color, id));
                             }
 
                             adapter = new CustomAdapterAppsFragment(view.getContext(), dataHours);
-                            listView.setAdapter(adapter);
+
+                            listView.setAdapter(adapter); // Do not work
 
                         } catch (JSONException e) {
 
