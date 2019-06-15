@@ -15,7 +15,6 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="24dp"
         android:fontFamily="sans-serif-light"
-        android:text="My Apps"
         android:textAllCaps="true"
         android:textColor="?attr/color_text"
         android:textSize="30sp"

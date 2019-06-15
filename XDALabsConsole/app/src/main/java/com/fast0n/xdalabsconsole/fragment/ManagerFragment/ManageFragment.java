@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -40,6 +41,7 @@ public class ManageFragment extends Fragment {
     String domain;
     String sessionid;
     ListView listView;
+    TextView title;
     Snackbar snack;
     Handler handler = new Handler();
     ArrayList<DataDashboard> dataDashboard;
@@ -52,6 +54,8 @@ public class ManageFragment extends Fragment {
         context = getActivity().getApplicationContext();
         domain = getResources().getString(R.string.url);
         settings = context.getSharedPreferences("sharedPreferences", 0);
+
+        title = view.findViewById(R.id.title);
 
         listView = view.findViewById(R.id.list);
         dataDashboard = new ArrayList<>();
@@ -95,6 +99,8 @@ public class ManageFragment extends Fragment {
 
                 JSONObject response = new JSONObject(jsonDashboard);
 
+                title.setText(response.getString("title"));
+
                 JSONArray array = response.getJSONArray("dashboard");
 
                 int n = array.length();
@@ -132,6 +138,7 @@ public class ManageFragment extends Fragment {
                             PreferenceManager.getDefaultSharedPreferences(view.getContext()).edit()
                                     .putString("dashboard", response.toString()).apply();
 
+                            title.setText(response.getString("title"));
 
                             JSONArray array = response.getJSONArray("dashboard");
 

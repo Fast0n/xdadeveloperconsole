@@ -86,6 +86,14 @@ def get_app():
 
     return jsonify(data)
 
+@app.route("/get_xposed")
+def get_xposed():
+    sessionid = request.args.get("sessionid")
+    id = request.args.get("id")
+
+    data = xda.get_xposed(sessionid)
+
+    return jsonify(data)
 
 if __name__ == "__main__":
     xda.create_keys()

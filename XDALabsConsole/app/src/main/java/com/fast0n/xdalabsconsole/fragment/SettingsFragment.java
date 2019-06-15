@@ -42,6 +42,7 @@ public class SettingsFragment extends Fragment {
     private String domain;
     // declare objects
     private EditText edt_name, edt_email, edt_bitcoin, edt_paypal;
+    TextView title;
 
     @Nullable
     @Override
@@ -51,6 +52,8 @@ public class SettingsFragment extends Fragment {
         context = getActivity().getApplicationContext();
         settings = context.getSharedPreferences("sharedPreferences", 0);
         editor = settings.edit();
+
+        title = view.findViewById(R.id.title);
 
         domain = getResources().getString(R.string.url);
 
@@ -170,6 +173,7 @@ public class SettingsFragment extends Fragment {
 
                 JSONObject response = new JSONObject(jsonSettings);
 
+                title.setText(response.getString("title"));
 
                 // get json values
                 JSONObject name = response.getJSONObject("display_name");
@@ -230,6 +234,7 @@ public class SettingsFragment extends Fragment {
                             edt_bitcoin.setText(bitcoin.getString("value"));
                             edt_paypal.setText(paypal.getString("value"));
                             title_developer2.setText(paypal.getString("alert"));
+                            title.setText(response.getString("title"));
 
                             editor.putString("token", token.getString("value"));
                             editor.apply();

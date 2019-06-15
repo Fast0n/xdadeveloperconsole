@@ -116,9 +116,15 @@ def dashboard(sessionid):
 
     soup = BeautifulSoup(response, "html.parser")
 
+    # get element to parse
+    title = soup.find("div", {"id": "page-title"}).get_text().strip()
+
     elements = soup.find_all("div", {"class": "col-md-4"})
 
+    # insert parsed value in dict struct
     result = {"dashboard": []}
+
+    result["title"] = title
 
     for i, element in enumerate(elements):
         name = element.find("div", {"class": "tile-header"}).get_text().strip()
@@ -144,7 +150,13 @@ def settings(sessionid):
 
     soup = BeautifulSoup(response, "html.parser")
 
+    # get element to parse
+    title = soup.find("div", {"id": "page-title"}).get_text().strip()
+
     groups = soup.find_all("div", {"class": "form-group"})
+
+    # insert parsed value in dict struct
+    data["title"] = title
 
     for group in groups:
         input = group.find("input")
@@ -196,9 +208,11 @@ def apps(sessionid):
     soup = BeautifulSoup(response, "html.parser")
     rows = soup.find_all("div", {"class": "app-listing-row"})
 
-    data = {
-        "apps": []
-    }
+    title = soup.find("div", {"id": "page-title"}).get_text().strip()
+
+    data = { "apps": [] }
+
+    data["title"] = title
 
     for row in rows:
         info = {}
@@ -263,3 +277,20 @@ def get_app(sessionid, id):
             result[key]["img"] = a.get("href")
 
     return result
+
+def get_xposed(sessionid):
+    cookies = {
+        "sessionid": sessionid
+    }
+
+    response = r.get("https://labs.xda-developers.com/manage/modules/", cookies=cookies).text
+
+    soup = BeautifulSoup(response, "html.parser")
+
+    title = soup.find("div", {"id": "page-title"}).get_text().strip()
+
+    data = {}
+
+    data["title"] = title
+
+    return data

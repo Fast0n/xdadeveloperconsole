@@ -1,6 +1,6 @@
 <resources>
     <string name="url">http://51.158.173.57:1337</string>
-    <!--string name="url">https://6e135817.ngrok.io</string>-->
+    <!--<string name="url">https://0b024eb0.ngrok.io</string>-->
 
 
     <string name="app_name">XDA Labs Console</string>

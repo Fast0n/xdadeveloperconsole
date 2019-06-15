@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -41,6 +42,7 @@ public class AppsFragment extends Fragment {
     String domain;
     String sessionid;
     ListView listView;
+    TextView title;
     Snackbar snack;
     Handler handler = new Handler();
     ArrayList<DataApps> dataApps;
@@ -53,6 +55,8 @@ public class AppsFragment extends Fragment {
         context = getActivity().getApplicationContext();
         domain = getResources().getString(R.string.url);
         settings = context.getSharedPreferences("sharedPreferences", 0);
+
+        title = view.findViewById(R.id.title);
 
         listView = view.findViewById(R.id.list);
         dataApps = new ArrayList<>();
@@ -97,6 +101,8 @@ public class AppsFragment extends Fragment {
 
                 JSONArray array = response.getJSONArray("apps");
 
+                title.setText(response.getString("title"));
+
                 int n = array.length();
 
                 for (int j = 0; j < n; j++) {
@@ -137,6 +143,8 @@ public class AppsFragment extends Fragment {
 
 
                             JSONArray array = response.getJSONArray("apps");
+
+                            title.setText(response.getString("title"));
 
                             int n = array.length();
 
