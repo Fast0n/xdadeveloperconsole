@@ -15,6 +15,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -31,20 +33,22 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class ManageFragment extends Fragment {
 
+    final List<DataDashboard> dataDashboard = new ArrayList<>();
     Context context;
-
-    CustomAdapterManagerFragment adapter;
+    CustomAdapterManagerFragment ca;
     SharedPreferences settings;
     String domain;
     String sessionid;
     ListView listView;
     TextView title;
     Snackbar snack;
+    RecyclerView recyclerView;
     Handler handler = new Handler();
-    ArrayList<DataDashboard> dataDashboard;
+
 
     @Nullable
     @Override
@@ -57,20 +61,22 @@ public class ManageFragment extends Fragment {
 
         title = view.findViewById(R.id.title);
 
-        listView = view.findViewById(R.id.list);
-        dataDashboard = new ArrayList<>();
-
+        recyclerView = view.findViewById(R.id.recycler_view);
         sessionid = settings.getString("sessionid", null);
 
         String url = String.format("%s/dashboard?sessionid=%s", domain, sessionid);
 
+        // initial recycle view
+        recyclerView.setHasFixedSize(true);
+        LinearLayoutManager llm = new LinearLayoutManager(context);
+        llm.setOrientation(RecyclerView.VERTICAL);
+        recyclerView.setLayoutManager(llm);
 
         try {
             if (isOnline()) {
                 getDashbord(view, url, 1);
                 handler.postDelayed(() -> {
-                    adapter.clear();
-                    adapter.notifyDataSetChanged();
+                    dataDashboard.clear();
                     getDashbord(view, url, 0);
                 }, 1000);
 
@@ -112,8 +118,8 @@ public class ManageFragment extends Fragment {
                     dataDashboard.add(new DataDashboard(name, value, color));
                 }
 
-                adapter = new CustomAdapterManagerFragment(view.getContext(), dataDashboard);
-                listView.setAdapter(adapter);
+                ca = new CustomAdapterManagerFragment(context, dataDashboard);
+                recyclerView.setAdapter(ca);
             } catch (JSONException e) {
 
                 snack = Snackbar.make(
@@ -151,8 +157,8 @@ public class ManageFragment extends Fragment {
                                 dataDashboard.add(new DataDashboard(name, value, color));
                             }
 
-                            adapter = new CustomAdapterManagerFragment(view.getContext(), dataDashboard);
-                            listView.setAdapter(adapter);
+                            ca = new CustomAdapterManagerFragment(context, dataDashboard);
+                            recyclerView.setAdapter(ca);
 
                         } catch (JSONException e) {
 

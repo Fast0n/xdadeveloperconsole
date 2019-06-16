@@ -10,12 +10,12 @@ import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -32,20 +32,19 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class AppsFragment extends Fragment {
 
+    final List<DataApps> dataApps = new ArrayList<>();
     Context context;
-
-    CustomAdapterAppsFragment adapter;
+    CustomAdapterAppsFragment ca;
     SharedPreferences settings;
     String domain;
-    String sessionid;
-    ListView listView;
-    TextView title;
     Snackbar snack;
     Handler handler = new Handler();
-    ArrayList<DataApps> dataApps;
+    RecyclerView recyclerView;
+    private String sessionid;
 
     @Nullable
     @Override
@@ -56,24 +55,22 @@ public class AppsFragment extends Fragment {
         domain = getResources().getString(R.string.url);
         settings = context.getSharedPreferences("sharedPreferences", 0);
 
-        title = view.findViewById(R.id.title);
-
-        listView = view.findViewById(R.id.list);
-        dataApps = new ArrayList<>();
-
+        recyclerView = view.findViewById(R.id.recycler_view);
         sessionid = settings.getString("sessionid", null);
 
         String url = String.format("%s/apps?sessionid=%s", domain, sessionid);
 
+        // initial recycle view
+        recyclerView.setHasFixedSize(true);
+        LinearLayoutManager llm = new LinearLayoutManager(context);
+        llm.setOrientation(RecyclerView.VERTICAL);
+        recyclerView.setLayoutManager(llm);
 
         try {
-
             getApp(view, url, 1);
-
             if (isOnline())
                 handler.postDelayed(() -> {
-                    adapter.clear();
-                    adapter.notifyDataSetChanged();
+                    dataApps.clear();
                     getApp(view, url, 0);
                 }, 1000);
 
@@ -98,10 +95,8 @@ public class AppsFragment extends Fragment {
                 String jsonApps = PreferenceManager.getDefaultSharedPreferences(view.getContext()).getString("apps", null);
 
                 JSONObject response = new JSONObject(jsonApps);
-
                 JSONArray array = response.getJSONArray("apps");
 
-                title.setText(response.getString("title"));
 
                 int n = array.length();
 
@@ -113,9 +108,8 @@ public class AppsFragment extends Fragment {
                     dataApps.add(new DataApps(name, value, color, id));
                 }
 
-                adapter = new CustomAdapterAppsFragment(view.getContext(), dataApps);
-
-                listView.setAdapter(adapter);
+                ca = new CustomAdapterAppsFragment(context, dataApps);
+                recyclerView.setAdapter(ca);
 
             } catch (JSONException e) {
 
@@ -144,8 +138,6 @@ public class AppsFragment extends Fragment {
 
                             JSONArray array = response.getJSONArray("apps");
 
-                            title.setText(response.getString("title"));
-
                             int n = array.length();
 
                             for (int j = 0; j < n; j++) {
@@ -157,9 +149,8 @@ public class AppsFragment extends Fragment {
                                 dataApps.add(new DataApps(name, img, color, id));
                             }
 
-                            adapter = new CustomAdapterAppsFragment(view.getContext(), dataApps);
-
-                            listView.setAdapter(adapter); // Do not work
+                            ca = new CustomAdapterAppsFragment(context, dataApps);
+                            recyclerView.setAdapter(ca);
 
                         } catch (JSONException e) {
 

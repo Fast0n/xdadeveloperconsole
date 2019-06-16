@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="about_app">Informazioni su XDA Labs Console</string>
+    <string name="account_fragment_settings">Impostazioni Account</string>
+    <string name="add_access">Accedi con l\'account XDA</string>
+    <string name="alert">Compila tutti i campi</string>
+    <string name="alert1">Impostazioni aggiornate</string>
+    <string name="application_fragment_settings">Impostazioni Applicazione</string>
+    <string name="btn_login">Invia</string>
+    <string name="copy">Copia</string>
+    <string name="dark_theme">Tema Scuro</string>
+    <string name="developer_fragment_settings">Impostazioni Sviluppatore</string>
+    <string name="edt_id">Nome Utente</string>
+    <string name="retry">Riprova</string>
+    <string name="title_apps">Le mie app</string>
+    <string name="title_fragment_settings">Impostazioni</string>
+    <string name="title_xposed">I miei moduli Xposed</string>
+    <string name="tv_forget_password">Password dimenticata?</string>
+    <string name="version">"Versione XDA Labs Console: "</string>
+    <string name="save">Salva</string>
+</resources>

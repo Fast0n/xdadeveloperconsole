@@ -1,22 +1,31 @@
 <resources>
-    <!--<string name="url">http://51.158.173.57:1337</string>-->
-    <string name="url">https://cc71ba86.ngrok.io</string>
+    <string name="url" translatable="false">http://51.158.173.57:1337</string>
+    <!-- <string name="url">https://cc71ba86.ngrok.io</string>-->
 
-    <string name="app_name">XDA Labs Console</string>
-    <string name="title_activity_login">LoginActivity</string>
-
+    <string name="app_name" translatable="false">XDA Labs Console</string>
     <string name="add_access">Login with your XDA Account</string>
 
 
     <string name="tv_forget_password">Forgot Password?</string>
-    <string name="btn_login">Invia</string>
+    <string name="btn_login">Send</string>
     <string name="edt_password" translatable="false">Password</string>
     <string name="edt_id">Username</string>
-    <string name="title_activity_home">HomeActivity</string>
+    <string name="retry">Retry</string>
 
 
-    <string name="title_dashboard">Dashboard</string>
+    <string name="title_dashboard" translatable="false">Dashboard</string>
     <string name="title_apps">My Apps</string>
     <string name="title_xposed">My Xposed Modules</string>
+    <string name="copy">Copy</string>
+    <string name="version">"Version XDA Labs Console: "</string>
+    <string name="title_fragment_settings">Settings</string>
+    <string name="account_fragment_settings">Settings Account</string>
+    <string name="developer_fragment_settings">Developer Settings</string>
+    <string name="dark_theme">Dark Theme</string>
+    <string name="about_app">About XDA Labs Console</string>
+    <string name="alert">Compile all fileds</string>
+    <string name="alert1">Settings updates</string>
+    <string name="application_fragment_settings">Application Settings</string>
+    <string name="save">Save</string>
 
 </resources>

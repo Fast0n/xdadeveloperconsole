@@ -5,64 +5,67 @@ import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.fast0n.xdalabsconsole.R;
 
-import java.util.ArrayList;
+import java.util.List;
 
-public class CustomAdapterManagerFragment extends ArrayAdapter<DataDashboard> {
 
-    private Context context;
+public class CustomAdapterManagerFragment extends RecyclerView.Adapter<CustomAdapterManagerFragment.MyViewHolder> {
 
-    CustomAdapterManagerFragment(Context context, ArrayList<DataDashboard> data) {
-        super(context, R.layout.row_dashboard, data);
+    private final List<DataDashboard> infoList;
+    private final Context context;
+
+    CustomAdapterManagerFragment(Context context, List<DataDashboard> infoList) {
         this.context = context;
+        this.infoList = infoList;
 
     }
+
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        // Get the data item for this position
-        DataDashboard dataItems = getItem(position);
-        // Check if an existing view is being reused, otherwise inflate the view
-        ViewHolder viewHolder;
+    public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
+        DataDashboard c = infoList.get(position);
 
-        if (convertView == null) {
-
-            viewHolder = new ViewHolder();
-            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            assert inflater != null;
-            convertView = inflater.inflate(R.layout.row_dashboard, parent, false);
+        holder.txtValue.setText(c.value);
+        holder.txtTitle.setText(c.title);
+        holder.txtColor.setText(c.color);
+        holder.cardView.setCardBackgroundColor(Color.parseColor(holder.txtColor.getText().toString()));
 
 
-            // addressed
-            viewHolder.txtTitle = convertView.findViewById(R.id.title);
-            viewHolder.txtValue = convertView.findViewById(R.id.value);
-            viewHolder.txtColor = convertView.findViewById(R.id.color);
-            viewHolder.cardView = convertView.findViewById(R.id.cardView);
-
-
-            convertView.setTag(viewHolder);
-        } else
-            viewHolder = (ViewHolder) convertView.getTag();
-
-
-        viewHolder.txtValue.setText(dataItems.getValue());
-        viewHolder.txtTitle.setText(dataItems.getTitle());
-        viewHolder.txtColor.setText(dataItems.getColor());
-        viewHolder.cardView.setCardBackgroundColor(Color.parseColor(viewHolder.txtColor.getText().toString()));
-
-
-        return convertView;
     }
 
-    private static class ViewHolder {
+
+    @Override
+    public int getItemCount() {
+        return infoList.size();
+    }
+
+    @NonNull
+    @Override
+    public CustomAdapterManagerFragment.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_dashboard, parent, false);
+        return new CustomAdapterManagerFragment.MyViewHolder(v);
+    }
+
+    class MyViewHolder extends RecyclerView.ViewHolder {
+
         TextView txtTitle, txtValue, txtColor;
         CardView cardView;
+
+        MyViewHolder(View view) {
+            super(view);
+            // addressed
+            txtTitle = view.findViewById(R.id.title);
+            txtValue = view.findViewById(R.id.value);
+            txtColor = view.findViewById(R.id.color);
+            cardView = view.findViewById(R.id.cardView);
+        }
     }
 }
 

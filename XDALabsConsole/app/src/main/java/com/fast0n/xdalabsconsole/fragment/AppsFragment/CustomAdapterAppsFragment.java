@@ -5,67 +5,68 @@ import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.fast0n.xdalabsconsole.R;
 
-import java.util.ArrayList;
+import java.util.List;
 
-public class CustomAdapterAppsFragment extends ArrayAdapter<DataApps> {
 
-    private Context context;
+public class CustomAdapterAppsFragment extends RecyclerView.Adapter<CustomAdapterAppsFragment.MyViewHolder> {
 
-    CustomAdapterAppsFragment(Context context, ArrayList<DataApps> data) {
-        super(context, R.layout.row_apps, data);
+    private final List<DataApps> infoList;
+    private final Context context;
+
+    CustomAdapterAppsFragment(Context context, List<DataApps> infoList) {
         this.context = context;
-
+        this.infoList = infoList;
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        // Get the data item for this position
-        DataApps dataItems = getItem(position);
-        // Check if an existing view is being reused, otherwise inflate the view
-        ViewHolder viewHolder;
+    public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
+        DataApps c = infoList.get(position);
 
-        if (convertView == null) {
-
-            viewHolder = new ViewHolder();
-            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            assert inflater != null;
-            convertView = inflater.inflate(R.layout.row_apps, parent, false);
+        Glide.with(context).load(c.img).into(holder.ivImg);
+        holder.txtTitle.setText(c.title);
+        holder.txtColor.setText(c.color);
+        holder.cardView.setCardBackgroundColor(Color.parseColor(holder.txtColor.getText().toString()));
 
 
-            // addressed
-            viewHolder.txtTitle = convertView.findViewById(R.id.title);
-            viewHolder.ivImg = convertView.findViewById(R.id.img);
-            viewHolder.txtColor = convertView.findViewById(R.id.color);
-            viewHolder.cardView = convertView.findViewById(R.id.cardView);
-
-
-            convertView.setTag(viewHolder);
-        } else
-            viewHolder = (ViewHolder) convertView.getTag();
-
-
-        Glide.with(context).load(dataItems.getImg()).into(viewHolder.ivImg);
-        viewHolder.txtTitle.setText(dataItems.getTitle());
-        viewHolder.txtColor.setText(dataItems.getColor());
-        viewHolder.cardView.setCardBackgroundColor(Color.parseColor(viewHolder.txtColor.getText().toString()));
-
-
-        return convertView;
     }
 
-    private static class ViewHolder {
+
+    @Override
+    public int getItemCount() {
+        return infoList.size();
+    }
+
+    @NonNull
+    @Override
+    public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_apps, parent, false);
+        return new MyViewHolder(v);
+    }
+
+    class MyViewHolder extends RecyclerView.ViewHolder {
+
         TextView txtTitle, txtColor;
         CardView cardView;
         ImageView ivImg;
+
+        MyViewHolder(View view) {
+            super(view);
+            // addressed
+            txtTitle = view.findViewById(R.id.title);
+            ivImg = view.findViewById(R.id.img);
+            txtColor = view.findViewById(R.id.color);
+            cardView = view.findViewById(R.id.cardView);
+        }
     }
 }
 

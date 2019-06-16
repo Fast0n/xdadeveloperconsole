@@ -42,7 +42,6 @@ public class SettingsFragment extends Fragment {
     private String domain;
     // declare objects
     private EditText edt_name, edt_email, edt_bitcoin, edt_paypal;
-    TextView title;
 
     @Nullable
     @Override
@@ -53,7 +52,6 @@ public class SettingsFragment extends Fragment {
         settings = context.getSharedPreferences("sharedPreferences", 0);
         editor = settings.edit();
 
-        title = view.findViewById(R.id.title);
 
         domain = getResources().getString(R.string.url);
 
@@ -136,11 +134,11 @@ public class SettingsFragment extends Fragment {
 
             Snackbar snack = Snackbar.make(
                     view1,
-                    "Version XDA Labs Console: " + BuildConfig.VERSION_NAME + "\n(" + BuildConfig.VERSION_CODE + ")",
+                    getString(R.string.version) + BuildConfig.VERSION_NAME + "\n(" + BuildConfig.VERSION_CODE + ")",
                     Snackbar.LENGTH_LONG
             );
             SnackbarHelper.configSnackbar(view1.getContext(), snack);
-            snack.setAction("Copia", v -> {
+            snack.setAction(getString(R.string.copy), v -> {
 
                 ClipboardManager clipboard = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
                 ClipData clip = ClipData.newPlainText("copied", BuildConfig.VERSION_NAME + " (" + BuildConfig.VERSION_CODE + ")");
@@ -172,8 +170,6 @@ public class SettingsFragment extends Fragment {
                         getDefaultSharedPreferences(view.getContext()).getString("settings", null);
 
                 JSONObject response = new JSONObject(jsonSettings);
-
-                title.setText(response.getString("title"));
 
                 // get json values
                 JSONObject name = response.getJSONObject("display_name");
@@ -234,13 +230,12 @@ public class SettingsFragment extends Fragment {
                             edt_bitcoin.setText(bitcoin.getString("value"));
                             edt_paypal.setText(paypal.getString("value"));
                             title_developer2.setText(paypal.getString("alert"));
-                            title.setText(response.getString("title"));
 
                             editor.putString("token", token.getString("value"));
                             editor.apply();
 
                             // show success message
-                            Snackbar snack = Snackbar.make(view, "Impostazioni aggiornate", Snackbar.LENGTH_LONG);
+                            Snackbar snack = Snackbar.make(view, getString(R.string.alert1), Snackbar.LENGTH_LONG);
                             SnackbarHelper.configSnackbar(view.getContext(), snack);
                             snack.show();
 

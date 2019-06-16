@@ -100,7 +100,7 @@ public class LoginActivity extends AppCompatActivity {
             String username = edt_username.getText().toString();
             String password = edt_password.getText().toString();
 
-            if (!username.isEmpty() && !password.isEmpty() && !btn_login.getText().toString().equals("Riprova")) {
+            if (!username.isEmpty() && !password.isEmpty() && !btn_login.getText().toString().equals(getString(R.string.retry))) {
 
                 // get invisible element for animation
                 loginCard.setVisibility(View.INVISIBLE);
@@ -115,10 +115,9 @@ public class LoginActivity extends AppCompatActivity {
                 rotateLoading.start();
 
                 getKey(v, username, password);
-            }
-            else {
+            } else {
 
-                String message = "Compila tutti i campi";
+                String message = getString(R.string.alert);
                 Snackbar snack = Snackbar.make(v, message, Snackbar.LENGTH_LONG);
                 SnackbarHelper.configSnackbar(v.getContext(), snack);
                 snack.show();
@@ -128,16 +127,16 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
-    private void apiError(View view, String message, int mode){
+    private void apiError(View view, String message, int mode) {
 
         // stop animation
         rotateLoading.stop();
 
-        if (mode == 1){
+        if (mode == 1) {
 
             snack = Snackbar.make(view, message, Snackbar.LENGTH_INDEFINITE);
             SnackbarHelper.configSnackbar(view.getContext(), snack);
-            snack.setAction("Riprova", v -> {
+            snack.setAction(getString(R.string.retry), v -> {
 
                 // get sessionId
                 String sessionId = settings.getString("sessionid", null);
@@ -149,14 +148,13 @@ public class LoginActivity extends AppCompatActivity {
                 checkSessionId(view, url);
             });
             snack.show();
-        }
-        else if (mode == 0){
+        } else if (mode == 0) {
             // get visible element for animation
             btn_login.setVisibility(View.VISIBLE);
             loginCard.setVisibility(View.VISIBLE);
             forgotPassword.setVisibility(View.VISIBLE);
 
-            snack = Snackbar.make(view,"API error", Snackbar.LENGTH_LONG);
+            snack = Snackbar.make(view, "API error", Snackbar.LENGTH_LONG);
             SnackbarHelper.configSnackbar(view.getContext(), snack);
             snack.show();
         }
@@ -192,9 +190,9 @@ public class LoginActivity extends AppCompatActivity {
                     }
 
                 }, e -> {
-                    String message = "API Error";
-                    apiError(view, message, 0);
-                });
+            String message = "API Error";
+            apiError(view, message, 0);
+        });
 
         getRequest.setRetryPolicy(new RetryPolicy() {
             @Override
@@ -244,14 +242,14 @@ public class LoginActivity extends AppCompatActivity {
 
                     } catch (JSONException e) {
                         String message = "API Error";
-                        apiError(view, message,1);
+                        apiError(view, message, 1);
                     }
 
 
                 },
                 e -> {
                     String message = "API Error";
-                    apiError(view, message,1);
+                    apiError(view, message, 1);
                 });
 
         queue.add(getRequest);
@@ -281,9 +279,9 @@ public class LoginActivity extends AppCompatActivity {
                     }
 
                 }, e -> {
-                    String message = "API Error";
-                    apiError(view, message,1);
-                });
+            String message = "API Error";
+            apiError(view, message, 1);
+        });
 
         getRequest.setRetryPolicy(new RetryPolicy() {
             @Override
@@ -345,13 +343,13 @@ public class LoginActivity extends AppCompatActivity {
 
                     } catch (Exception e) {
                         String message = "API Error";
-                        apiError(view, message,0);
+                        apiError(view, message, 0);
                     }
 
                 },
                 e -> {
                     String message = "API Error";
-                    apiError(view, message,0);
+                    apiError(view, message, 0);
                 });
 
         queue.add(getRequest);
