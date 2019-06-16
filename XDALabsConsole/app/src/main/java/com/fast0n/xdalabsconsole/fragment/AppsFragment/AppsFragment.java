@@ -121,59 +121,65 @@ public class AppsFragment extends Fragment {
                 SnackbarHelper.configSnackbar(view.getContext(), snack);
                 snack.show();
             }
-        } else {
+        }
+        else {
             RequestQueue queue = Volley.newRequestQueue(context);
             queue.getCache().clear();
             JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, url, null,
                     response -> {
                         try {
 
-                            PreferenceManager.getDefaultSharedPreferences(view.getContext()).edit()
-                                    .remove("apps").apply();
+                            String jsonApp = PreferenceManager.getDefaultSharedPreferences(view.getContext()).getString("apps", null);
+
+                            if (jsonApp != null && !jsonApp.equals(response.toString())) {
+
+                                PreferenceManager.getDefaultSharedPreferences(view.getContext()).edit()
+                                        .remove("apps").apply();
 
 
-                            PreferenceManager.getDefaultSharedPreferences(view.getContext()).edit()
-                                    .putString("apps", response.toString()).apply();
+                                PreferenceManager.getDefaultSharedPreferences(view.getContext()).edit()
+                                        .putString("apps", response.toString()).apply();
 
 
-                            JSONArray array = response.getJSONArray("apps");
+                                JSONArray array = response.getJSONArray("apps");
 
-                            int n = array.length();
+                                int n = array.length();
 
-                            for (int j = 0; j < n; j++) {
-                                String name = array.getJSONObject(j).getString("name");
-                                String img = array.getJSONObject(j).getString("img");
-                                String color = array.getJSONObject(j).getString("color");
-                                String id = array.getJSONObject(j).getString("id");
+                                for (int j = 0; j < n; j++) {
+                                    String name = array.getJSONObject(j).getString("name");
+                                    String img = array.getJSONObject(j).getString("img");
+                                    String color = array.getJSONObject(j).getString("color");
+                                    String id = array.getJSONObject(j).getString("id");
 
-                                dataApps.add(new DataApps(name, img, color, id));
+                                    dataApps.add(new DataApps(name, img, color, id));
+                                }
+
+                                ca = new CustomAdapterAppsFragment(context, dataApps);
+                                recyclerView.setAdapter(ca);
+
+                                snack = Snackbar.make(view,"Apps aggiornate", Snackbar.LENGTH_SHORT);
+                                SnackbarHelper.configSnackbar(view.getContext(), snack);
+                                snack.show();
+
                             }
 
-                            ca = new CustomAdapterAppsFragment(context, dataApps);
-                            recyclerView.setAdapter(ca);
-
                         } catch (JSONException e) {
-
-                            snack = Snackbar.make(
-                                    view,
-                                    "API error",
-                                    Snackbar.LENGTH_LONG
-                            );
+                            snack = Snackbar.make(view,"API error", Snackbar.LENGTH_LONG);
                             SnackbarHelper.configSnackbar(view.getContext(), snack);
                             snack.show();
                         }
 
                     }, e -> {
 
-                snack = Snackbar.make(
-                        view,
-                        "API error",
-                        Snackbar.LENGTH_LONG
-                );
-                SnackbarHelper.configSnackbar(view.getContext(), snack);
-                snack.show();
+                        snack = Snackbar.make(
+                                view,
+                                "API error",
+                                Snackbar.LENGTH_LONG
+                        );
+                        SnackbarHelper.configSnackbar(view.getContext(), snack);
+                        snack.show();
 
-            });
+                    });
 
             getRequest.setRetryPolicy(new RetryPolicy() {
                 @Override

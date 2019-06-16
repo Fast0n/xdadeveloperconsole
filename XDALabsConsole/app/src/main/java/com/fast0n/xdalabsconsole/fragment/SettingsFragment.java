@@ -40,6 +40,7 @@ public class SettingsFragment extends Fragment {
     private SharedPreferences settings;
     private SharedPreferences.Editor editor;
     private String domain;
+    private Snackbar snack;
     // declare objects
     private EditText edt_name, edt_email, edt_bitcoin, edt_paypal;
 
@@ -128,11 +129,9 @@ public class SettingsFragment extends Fragment {
 
         });
 
-
         info.setOnClickListener(view1 -> {
 
-
-            Snackbar snack = Snackbar.make(
+            snack = Snackbar.make(
                     view1,
                     getString(R.string.version) + BuildConfig.VERSION_NAME + "\n(" + BuildConfig.VERSION_CODE + ")",
                     Snackbar.LENGTH_LONG
@@ -166,8 +165,7 @@ public class SettingsFragment extends Fragment {
         if (i == 1) {
             try {
 
-                String jsonSettings = PreferenceManager.
-                        getDefaultSharedPreferences(view.getContext()).getString("settings", null);
+                String jsonSettings = PreferenceManager.getDefaultSharedPreferences(view.getContext()).getString("settings", null);
 
                 JSONObject response = new JSONObject(jsonSettings);
 
@@ -189,7 +187,7 @@ public class SettingsFragment extends Fragment {
 
 
             } catch (JSONException e) {
-                Snackbar snack = Snackbar.make(
+                snack = Snackbar.make(
                         view,
                         "API error",
                         Snackbar.LENGTH_LONG
@@ -206,42 +204,67 @@ public class SettingsFragment extends Fragment {
             JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, url, null,
                     response -> {
 
-
-                        PreferenceManager.getDefaultSharedPreferences(view.getContext()).edit()
-                                .remove("settings").apply();
-
-
-                        PreferenceManager.getDefaultSharedPreferences(view.getContext()).edit()
-                                .putString("settings", response.toString()).apply();
-
-
                         try {
 
-                            // get json values
-                            JSONObject name = response.getJSONObject("display_name");
-                            JSONObject email = response.getJSONObject("support_email");
-                            JSONObject bitcoin = response.getJSONObject("bitcoin_address");
-                            JSONObject paypal = response.getJSONObject("paypal_address");
-                            JSONObject token = response.getJSONObject("csrfmiddlewaretoken");
+                            String jsonSettings = PreferenceManager.getDefaultSharedPreferences(view.getContext()).getString("settings", null);
 
-                            // insert json values
-                            edt_name.setText(name.getString("value"));
-                            edt_email.setText(email.getString("value"));
-                            edt_bitcoin.setText(bitcoin.getString("value"));
-                            edt_paypal.setText(paypal.getString("value"));
-                            title_developer2.setText(paypal.getString("alert"));
+                            if (jsonSettings != null) {
 
-                            editor.putString("token", token.getString("value"));
-                            editor.apply();
+                                // get local json clone
+                                String localJson = jsonSettings;
+                                JSONObject obj = new JSONObject(localJson);
 
-                            // show success message
-                            Snackbar snack = Snackbar.make(view, getString(R.string.alert1), Snackbar.LENGTH_LONG);
-                            SnackbarHelper.configSnackbar(view.getContext(), snack);
-                            snack.show();
+                                // get response json clone
+                                String responseJson = response.toString();
+                                JSONObject obj2 = new JSONObject(responseJson);
+
+                                // remove token from objects to compare
+                                obj.remove("csrfmiddlewaretoken");
+                                obj2.remove("csrfmiddlewaretoken");
+
+                                localJson = obj.toString();
+                                responseJson = obj2.toString();
+
+                                if (!localJson.equals(responseJson)){
+
+                                    System.out.println(responseJson);
+                                    System.out.println(localJson);
+
+                                    PreferenceManager.getDefaultSharedPreferences(view.getContext()).edit()
+                                            .remove("settings").apply();
+
+
+                                    PreferenceManager.getDefaultSharedPreferences(view.getContext()).edit()
+                                            .putString("settings", response.toString()).apply();
+
+                                    // get json values
+                                    JSONObject name = response.getJSONObject("display_name");
+                                    JSONObject email = response.getJSONObject("support_email");
+                                    JSONObject bitcoin = response.getJSONObject("bitcoin_address");
+                                    JSONObject paypal = response.getJSONObject("paypal_address");
+                                    JSONObject token = response.getJSONObject("csrfmiddlewaretoken");
+
+                                    // insert json values
+                                    edt_name.setText(name.getString("value"));
+                                    edt_email.setText(email.getString("value"));
+                                    edt_bitcoin.setText(bitcoin.getString("value"));
+                                    edt_paypal.setText(paypal.getString("value"));
+                                    title_developer2.setText(paypal.getString("alert"));
+
+                                    editor.putString("token", token.getString("value"));
+                                    editor.apply();
+
+                                    // show success message
+                                    snack = Snackbar.make(view, getString(R.string.alert1), Snackbar.LENGTH_LONG);
+                                    SnackbarHelper.configSnackbar(view.getContext(), snack);
+                                    snack.show();
+
+                                }
+                            }
 
 
                         } catch (JSONException e) {
-                            Snackbar snack = Snackbar.make(
+                            snack = Snackbar.make(
                                     view,
                                     "API error",
                                     Snackbar.LENGTH_LONG
@@ -252,7 +275,7 @@ public class SettingsFragment extends Fragment {
 
                     }, e -> {
 
-                Snackbar snack = Snackbar.make(
+                snack = Snackbar.make(
                         view,
                         "API error",
                         Snackbar.LENGTH_LONG

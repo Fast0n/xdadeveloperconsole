@@ -100,8 +100,7 @@ public class ManageFragment extends Fragment {
 
         if (i == 1) {
             try {
-                String jsonDashboard = PreferenceManager.
-                        getDefaultSharedPreferences(view.getContext()).getString("dashboard", null);
+                String jsonDashboard = PreferenceManager.getDefaultSharedPreferences(view.getContext()).getString("dashboard", null);
 
                 JSONObject response = new JSONObject(jsonDashboard);
 
@@ -137,28 +136,38 @@ public class ManageFragment extends Fragment {
                     response -> {
                         try {
 
-                            PreferenceManager.getDefaultSharedPreferences(view.getContext()).edit()
-                                    .remove("dashboard").apply();
+                            String jsonDashboard = PreferenceManager.getDefaultSharedPreferences(view.getContext()).getString("dashboard", null);
+
+                            if (jsonDashboard != null && !jsonDashboard.equals(response.toString())) {
+
+                                PreferenceManager.getDefaultSharedPreferences(view.getContext()).edit()
+                                        .remove("dashboard").apply();
 
 
-                            PreferenceManager.getDefaultSharedPreferences(view.getContext()).edit()
-                                    .putString("dashboard", response.toString()).apply();
+                                PreferenceManager.getDefaultSharedPreferences(view.getContext()).edit()
+                                        .putString("dashboard", response.toString()).apply();
 
-                            title.setText(response.getString("title"));
+                                title.setText(response.getString("title"));
 
-                            JSONArray array = response.getJSONArray("dashboard");
+                                JSONArray array = response.getJSONArray("dashboard");
 
-                            int n = array.length();
+                                int n = array.length();
 
-                            for (int j = 0; j < n; j++) {
-                                String name = array.getJSONObject(j).getString("name");
-                                String value = array.getJSONObject(j).getString("value");
-                                String color = array.getJSONObject(j).getString("color");
-                                dataDashboard.add(new DataDashboard(name, value, color));
+                                for (int j = 0; j < n; j++) {
+                                    String name = array.getJSONObject(j).getString("name");
+                                    String value = array.getJSONObject(j).getString("value");
+                                    String color = array.getJSONObject(j).getString("color");
+                                    dataDashboard.add(new DataDashboard(name, value, color));
+                                }
+
+                                ca = new CustomAdapterManagerFragment(context, dataDashboard);
+                                recyclerView.setAdapter(ca);
+
+                                snack = Snackbar.make(view,"Dashboard aggiornata", Snackbar.LENGTH_SHORT);
+                                SnackbarHelper.configSnackbar(view.getContext(), snack);
+                                snack.show();
+
                             }
-
-                            ca = new CustomAdapterManagerFragment(context, dataDashboard);
-                            recyclerView.setAdapter(ca);
 
                         } catch (JSONException e) {
 

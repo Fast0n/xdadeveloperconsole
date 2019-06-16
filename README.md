@@ -61,9 +61,9 @@ or
 
 ```
 {   
-"bbpassword": bbpassword,
-"bbuserid": bbuserid,
-"sessionid": sessionid
+    "bbpassword": bbpassword,
+    "bbuserid": bbuserid,
+    "sessionid": sessionid
 }
 ```
 
@@ -71,7 +71,7 @@ or
 
 ```
 {   
-"sessionid": sessionid
+    "sessionid": sessionid
 }
 ```
 
@@ -88,23 +88,23 @@ settings request require sessionid and return https://labs.xda-developers.com/ma
 
 ```
 {
-"bitcoin_address": {
-"value": value
-},
-"csrfmiddlewaretoken": {
-"value": value
-},
-"display_name": {
-"value": value
-},
-"paypal_address": {
-"alert": "If you are accepting PayPal, we highly recommend that you explore enabling your account for micropayments, which should reduce the fees you pay to PayPal if your app sells for less than $10.",
-"value": value
-},
-"support_email": {
-"value": value
-},
-"title": "Settings"
+    "bitcoin_address": {
+        "value": value
+    },
+    "csrfmiddlewaretoken": {
+        "value": value
+    },
+    "display_name": {
+        "value": value
+    },
+    "paypal_address": {
+        "alert": "If you are accepting PayPal, we highly recommend that you explore enabling your account for micropayments, which should reduce the fees you pay to PayPal if your app sells for less than $10.",
+        "value": value
+    },
+    "support_email": {
+        "value": value
+    },
+    "title": "Settings"
 }
 ```
 
@@ -122,24 +122,24 @@ dashboard request require sessionid and return https://labs.xda-developers.com/m
 
 ```
 {
-"dashboard": [
-{
-"color": "#2ecc71",
-"name": "Apps",
-"value": "1"
-},
-{
-"color": "#3498db",
-"name": "Downloads",
-"value": "9"
-},
-{
-"color": "#e67e22",
-"name": "Balance",
-"value": "0 BTC"
-}
-],
-"title": "Fast0n's Dashboard"
+    "dashboard": [
+        {
+            "color": "#2ecc71",
+            "name": "Apps",
+            "value": "1"
+        },
+        {
+            "color": "#3498db",
+            "name": "Downloads",
+            "value": "9"
+        },
+        {
+            "color": "#e67e22",
+            "name": "Balance",
+            "value": "0 BTC"
+        }
+    ],
+    "title": "Fast0n's Dashboard"
 }
 ```
 
@@ -157,14 +157,14 @@ apps request require sessionid and return page title and list with all apps in h
 
 ```
 {
-"apps": [
-{
-"color": "#2ecc71",
-"id": "5d826e0d-2b11-403c-9865-e28dc8092bb1",
-"img": "https://labs-public-dl.xda-cdn.com/images/66901801-d08a-490e-b104-8ddebc6d27a9.png",
-"name": "Area Personale"
-}
-],
-"title": "My Apps"
+    "apps": [
+        {
+        "color": "#2ecc71",
+        "id": "5d826e0d-2b11-403c-9865-e28dc8092bb1",
+        "img": "https://labs-public-dl.xda-cdn.com/images/66901801-d08a-490e-b104-8ddebc6d27a9.png",
+        "name": "Area Personale"
+        }
+    ],
+    "title": "My Apps"
 }
 ```
