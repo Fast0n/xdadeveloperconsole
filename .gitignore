@@ -1,0 +1,7 @@
+API/*.db
+API/__pycache__
+API/PyQL/__pycache__
+API/constants/__pycache__
+API/.DS_Store
+img/.DS_Store
+.DS_Store
