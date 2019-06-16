@@ -15,7 +15,7 @@ def login():
     elif username and password:
         sessionid = xda.login(username, password.replace(" ", "+"))
     else:
-        sessionid = {"error": "insert username and password"}
+        sessionid = {"error": "parameters error"}
 
     return jsonify(sessionid)
 

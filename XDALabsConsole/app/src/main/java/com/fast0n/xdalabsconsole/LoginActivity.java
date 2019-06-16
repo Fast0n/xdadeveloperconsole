@@ -29,6 +29,8 @@ import com.victor.loading.rotate.RotateLoading;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Random;
+
 public class LoginActivity extends AppCompatActivity {
 
     Context context = LoginActivity.this;
@@ -38,6 +40,12 @@ public class LoginActivity extends AppCompatActivity {
     SharedPreferences settings;
     SharedPreferences.Editor editor;
     Snackbar snack;
+    RotateLoading rotateLoading;
+    CardView loginCard;
+    Button btn_login;
+    TextView forgotPassword;
+    EditText edt_username;
+    EditText edt_password;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +54,6 @@ public class LoginActivity extends AppCompatActivity {
         settings = getSharedPreferences("sharedPreferences", 0);
         editor = settings.edit();
         domain = getResources().getString(R.string.url);
-
 
         // get theme
         String theme = settings.getString("toggleTheme", null);
@@ -65,15 +72,16 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         // declare objects
-        RotateLoading rotateloading = findViewById(R.id.rotateloading);
-        CardView loginCard = findViewById(R.id.cardView);
-        TextView forgotPassword = findViewById(R.id.textView2);
-        EditText edt_username = findViewById(R.id.edt_id);
-        EditText edt_password = findViewById(R.id.edt_password);
-        Button btn_login = findViewById(R.id.btn_login);
+        rotateLoading = findViewById(R.id.rotateloading);
+        loginCard = findViewById(R.id.cardView);
+        forgotPassword = findViewById(R.id.textView2);
+        edt_username = findViewById(R.id.edt_id);
+        edt_password = findViewById(R.id.edt_password);
+        btn_login = findViewById(R.id.btn_login);
 
         // check session id
         String sessionId = settings.getString("sessionid", null);
+
         if (sessionId != null) {
             // get invisible element for animation
             loginCard.setVisibility(View.INVISIBLE);
@@ -81,7 +89,7 @@ public class LoginActivity extends AppCompatActivity {
             btn_login.setVisibility(View.INVISIBLE);
 
             // start animation
-            rotateloading.start();
+            rotateLoading.start();
 
             String url = String.format("%s/check?sessionid=%s", domain, sessionId);
             checkSessionId(view, url);
@@ -92,23 +100,23 @@ public class LoginActivity extends AppCompatActivity {
             String username = edt_username.getText().toString();
             String password = edt_password.getText().toString();
 
-            if (!username.isEmpty() && !password.isEmpty()) {
+            if (!username.isEmpty() && !password.isEmpty() && !btn_login.getText().toString().equals("Riprova")) {
 
                 // get invisible element for animation
                 loginCard.setVisibility(View.INVISIBLE);
                 forgotPassword.setVisibility(View.INVISIBLE);
                 btn_login.setVisibility(View.INVISIBLE);
 
-                // TODO: get keyboard down :)
                 InputMethodManager imm = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
                 assert imm != null;
                 imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
 
                 // start animation
-                rotateloading.start();
+                rotateLoading.start();
 
                 getKey(v, username, password);
-            } else {
+            }
+            else {
 
                 String message = "Compila tutti i campi";
                 Snackbar snack = Snackbar.make(v, message, Snackbar.LENGTH_LONG);
@@ -117,6 +125,41 @@ public class LoginActivity extends AppCompatActivity {
             }
 
         });
+
+    }
+
+    private void apiError(View view, String message, int mode){
+
+        // stop animation
+        rotateLoading.stop();
+
+        if (mode == 1){
+
+            snack = Snackbar.make(view, message, Snackbar.LENGTH_INDEFINITE);
+            SnackbarHelper.configSnackbar(view.getContext(), snack);
+            snack.setAction("Riprova", v -> {
+
+                // get sessionId
+                String sessionId = settings.getString("sessionid", null);
+
+                // start animation
+                rotateLoading.start();
+
+                String url = String.format("%s/check?sessionid=%s", domain, sessionId);
+                checkSessionId(view, url);
+            });
+            snack.show();
+        }
+        else if (mode == 0){
+            // get visible element for animation
+            btn_login.setVisibility(View.VISIBLE);
+            loginCard.setVisibility(View.VISIBLE);
+            forgotPassword.setVisibility(View.VISIBLE);
+
+            snack = Snackbar.make(view,"API error", Snackbar.LENGTH_LONG);
+            SnackbarHelper.configSnackbar(view.getContext(), snack);
+            snack.show();
+        }
 
     }
 
@@ -140,34 +183,18 @@ public class LoginActivity extends AppCompatActivity {
                             // get error message
                             JSONObject error = response.getJSONObject("error");
                             String message = error.getString("message");
-                            // show error message
-                            Snackbar snack = Snackbar.make(view, message, Snackbar.LENGTH_LONG);
-                            SnackbarHelper.configSnackbar(view.getContext(), snack);
-                            snack.show();
+                            apiError(view, message, 0);
                         }
 
                     } catch (JSONException e) {
-
-                        snack = Snackbar.make(
-                                view,
-                                "API error",
-                                Snackbar.LENGTH_LONG
-                        );
-                        SnackbarHelper.configSnackbar(view.getContext(), snack);
-                        snack.show();
+                        String message = "API Error";
+                        apiError(view, message, 0);
                     }
 
                 }, e -> {
-
-            snack = Snackbar.make(
-                    view,
-                    "API error",
-                    Snackbar.LENGTH_LONG
-            );
-            SnackbarHelper.configSnackbar(view.getContext(), snack);
-            snack.show();
-
-        });
+                    String message = "API Error";
+                    apiError(view, message, 0);
+                });
 
         getRequest.setRetryPolicy(new RetryPolicy() {
             @Override
@@ -216,18 +243,15 @@ public class LoginActivity extends AppCompatActivity {
 
 
                     } catch (JSONException e) {
-                        snack = Snackbar.make(view, "API error", Snackbar.LENGTH_LONG);
-                        SnackbarHelper.configSnackbar(view.getContext(), snack);
-                        snack.show();
+                        String message = "API Error";
+                        apiError(view, message,1);
                     }
 
 
                 },
                 e -> {
-                    snack = Snackbar.make(view, "API error", Snackbar.LENGTH_LONG);
-                    SnackbarHelper.configSnackbar(view.getContext(), snack);
-                    snack.show();
-
+                    String message = "API Error";
+                    apiError(view, message,1);
                 });
 
         queue.add(getRequest);
@@ -252,27 +276,14 @@ public class LoginActivity extends AppCompatActivity {
 
 
                     } catch (JSONException e) {
-
-                        snack = Snackbar.make(
-                                view,
-                                "API error",
-                                Snackbar.LENGTH_LONG
-                        );
-                        SnackbarHelper.configSnackbar(view.getContext(), snack);
-                        snack.show();
+                        String message = "API Error";
+                        apiError(view, message, 1);
                     }
 
                 }, e -> {
-
-            snack = Snackbar.make(
-                    view,
-                    "API error",
-                    Snackbar.LENGTH_LONG
-            );
-            SnackbarHelper.configSnackbar(view.getContext(), snack);
-            snack.show();
-
-        });
+                    String message = "API Error";
+                    apiError(view, message,1);
+                });
 
         getRequest.setRetryPolicy(new RetryPolicy() {
             @Override
@@ -305,6 +316,16 @@ public class LoginActivity extends AppCompatActivity {
                     try {
 
                         String key = response.getString("key");
+                        // String id = response.getString("id"); TODO: implement :)
+
+                        // gen random salt
+                        Random random = new Random();
+                        int val = random.nextInt(2147483647);
+                        String salt = String.format("%1$08X", val);
+
+                        // add salt to password
+                        String saltedPassword = String.format("%s%s", password, salt);
+                        System.out.println(saltedPassword);
 
                         // decode key from base 64
                         byte[] binaryKey = B64.decodeString(key);
@@ -312,7 +333,7 @@ public class LoginActivity extends AppCompatActivity {
                         // encrypt password with key
                         RSA Crypt = new RSA();
                         Crypt.importPublicKey(binaryKey);
-                        byte[] encrypt = Crypt.encrypt(password);
+                        byte[] encrypt = Crypt.encrypt(saltedPassword);
 
                         // encode key in base 64
                         String base64Password = new String(B64.encodeBinary(encrypt));
@@ -323,24 +344,18 @@ public class LoginActivity extends AppCompatActivity {
 
 
                     } catch (Exception e) {
-
-                        Snackbar snack = Snackbar.make(view, "API error", Snackbar.LENGTH_LONG);
-                        SnackbarHelper.configSnackbar(view.getContext(), snack);
-                        snack.show();
+                        String message = "API Error";
+                        apiError(view, message,0);
                     }
 
                 },
                 e -> {
-                    snack = Snackbar.make(
-                            view,
-                            "API error",
-                            Snackbar.LENGTH_LONG
-                    );
-                    SnackbarHelper.configSnackbar(view.getContext(), snack);
-                    snack.show();
-
+                    String message = "API Error";
+                    apiError(view, message,0);
                 });
 
         queue.add(getRequest);
     }
+
 }
+

@@ -9,7 +9,10 @@ def decode(text):
 
     private_key = RSA.importKey(get_key("private", False))
 
-    return private_key.decrypt(binary).decode("utf8")
+    try:
+        return private_key.decrypt(binary).decode("utf8")
+    except:
+        return None
 
 def encode(text, key):
     public_key = RSA.importKey(key)
@@ -67,8 +70,7 @@ def get_key(type="public", base_64=True):
     )[0][0]
 
 
-    if base_64:
-        key = base64.b64encode(key).decode("utf8")
+    if base_64: key = base64.b64encode(key).decode("utf8")
 
     return key
 
@@ -76,21 +78,34 @@ def login(username, password):
     """ function to get login """
     password = decode(password)
 
-    data = {
-        "username": username,
-        "password": password
-    }
-    response = r.post("https://api.xda-developers.com/user/login", data=data)
-    if "success" in response.json():
-        cookies = response.cookies.get_dict()
-        result = {}
-        result["bbuserid"] = response.cookies.get_dict()["bbuserid"]
-        result["bbpassword"] = response.cookies.get_dict()["bbpassword"]
-        result["sessionid"] = get_sessionid(cookies)["sessionid"]
-    else:
-        result = response.json()
+    if password:
+        # remove salt from password
+        password = password[:-8]
 
-    return result
+        data = {
+            "username": username,
+            "password": password
+        }
+
+        response = r.post("https://api.xda-developers.com/user/login", data=data)
+
+        if "success" in response.json():
+            cookies = response.cookies.get_dict() # get cookies
+            result = {}
+            result["bbuserid"] = response.cookies.get_dict()["bbuserid"]
+            result["bbpassword"] = response.cookies.get_dict()["bbpassword"]
+            # get sessionid from response
+            result["sessionid"] = get_sessionid(cookies)["sessionid"]
+        else:
+            result = response.json()
+
+        return result
+
+    else:
+
+        result = {"error": "password encode error"}
+
+        return result
 
 def check_sessiod(sessionid):
     cookies = { "sessionid": sessionid }
