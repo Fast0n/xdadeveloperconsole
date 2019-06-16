@@ -84,7 +84,6 @@ public class SettingsFragment extends Fragment {
 
         };
 
-
         aSwitch.setOnCheckedChangeListener((compoundButton, b) -> {
             if (b) {
                 editor.putString("toggleTheme", "1");
@@ -125,7 +124,7 @@ public class SettingsFragment extends Fragment {
                     domain, sessionid, name, email, bitcoin, paypal, token
             );
 
-            settings(view, saveUrl, 1);
+            settings(view, saveUrl, 0);
 
         });
 
@@ -159,7 +158,6 @@ public class SettingsFragment extends Fragment {
                 && cm.getActiveNetworkInfo().isConnectedOrConnecting();
     }
 
-
     private void settings(View view, String url, int i) {
 
         if (i == 1) {
@@ -187,17 +185,14 @@ public class SettingsFragment extends Fragment {
 
 
             } catch (JSONException e) {
-                snack = Snackbar.make(
-                        view,
-                        "API error",
-                        Snackbar.LENGTH_LONG
-                );
+                snack = Snackbar.make(view,"Data error", Snackbar.LENGTH_LONG);
                 SnackbarHelper.configSnackbar(view.getContext(), snack);
                 snack.show();
             }
 
 
-        } else {
+        }
+        else {
 
             RequestQueue queue = Volley.newRequestQueue(context);
             queue.getCache().clear();
@@ -226,9 +221,6 @@ public class SettingsFragment extends Fragment {
                                 responseJson = obj2.toString();
 
                                 if (!localJson.equals(responseJson)){
-
-                                    System.out.println(responseJson);
-                                    System.out.println(localJson);
 
                                     PreferenceManager.getDefaultSharedPreferences(view.getContext()).edit()
                                             .remove("settings").apply();
@@ -264,26 +256,18 @@ public class SettingsFragment extends Fragment {
 
 
                         } catch (JSONException e) {
-                            snack = Snackbar.make(
-                                    view,
-                                    "API error",
-                                    Snackbar.LENGTH_LONG
-                            );
+                            snack = Snackbar.make(view,"API error", Snackbar.LENGTH_LONG);
                             SnackbarHelper.configSnackbar(view.getContext(), snack);
                             snack.show();
                         }
 
-                    }, e -> {
+                    },
+                    e -> {
+                        snack = Snackbar.make(view,"API error", Snackbar.LENGTH_LONG);
+                        SnackbarHelper.configSnackbar(view.getContext(), snack);
+                        snack.show();
 
-                snack = Snackbar.make(
-                        view,
-                        "API error",
-                        Snackbar.LENGTH_LONG
-                );
-                SnackbarHelper.configSnackbar(view.getContext(), snack);
-                snack.show();
-
-            });
+                    });
 
 
             queue.add(getRequest);
@@ -291,4 +275,5 @@ public class SettingsFragment extends Fragment {
         }
 
     }
+
 }

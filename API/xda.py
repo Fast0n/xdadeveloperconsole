@@ -201,15 +201,28 @@ def change_settings(sessionid, data):
     response = r.post("https://labs.xda-developers.com/manage/settings", headers=headers, cookies=cookies, data=data, allow_redirects=True).text
 
     result = {}
-    soup = BeautifulSoup(response, "html.parser")
-    inputs = soup.find_all("input", {"type": ["text", "email", "hidden"]})
 
-    for input in inputs:
+    soup = BeautifulSoup(response, "html.parser")
+
+    # get element to parse
+    title = soup.find("div", {"id": "page-title"}).get_text().strip()
+
+    groups = soup.find_all("div", {"class": "form-group"})
+
+    # insert parsed value in dict struct
+    result["title"] = title
+
+    for group in groups:
+        input = group.find("input")
         camp = input.get("name")
         result[camp] = {}
         result[camp]["value"] = input.get("value")
+        if group.find("div", {"class": "alert"}):
+            result[camp]["alert"] = group.find("div", {"class": "alert"}).get_text().strip()
 
-    print(result)
+    csrf = soup.find("input", {"type": ["hidden"]})
+    result[csrf.get("name")] = {}
+    result[csrf.get("name")]["value"] = csrf.get("value")
 
     return result
 
