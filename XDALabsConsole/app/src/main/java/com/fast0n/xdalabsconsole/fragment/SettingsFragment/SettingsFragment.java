@@ -12,7 +12,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.TextView;
 
@@ -50,14 +49,11 @@ public class SettingsFragment extends Fragment {
     private SharedPreferences.Editor editor;
     private String domain;
     private Snackbar snack;
-    // declare objects
-    private EditText edt_name, edt_email, edt_bitcoin, edt_paypal;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_settings, container, false);
-
 
         recyclerView = view.findViewById(R.id.recycler_view);
 
@@ -68,11 +64,9 @@ public class SettingsFragment extends Fragment {
         recyclerView.setNestedScrollingEnabled(false);
         recyclerView.setLayoutManager(llm);
 
-
         context = getActivity().getApplicationContext();
         settings = context.getSharedPreferences("sharedPreferences", 0);
         editor = settings.edit();
-
 
         domain = getResources().getString(R.string.url);
 
@@ -113,20 +107,17 @@ public class SettingsFragment extends Fragment {
             }
         });
 
-
         String checkSessionUrl = String.format("%s/settings?sessionid=%s", domain, sessionid);
 
-
         try {
+            settings(view, checkSessionUrl, 1);
             if (isOnline())
                 handler.postDelayed(() -> {
                     dataSettings.clear();
                     settings(view, checkSessionUrl, 0);
                 }, 1000);
-            else
-                settings(view, checkSessionUrl, 1);
-
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             settings(view, checkSessionUrl, 0);
         }
 
@@ -166,7 +157,6 @@ public class SettingsFragment extends Fragment {
 
 
         });
-
 
         return view;
     }
@@ -253,20 +243,22 @@ public class SettingsFragment extends Fragment {
 
                                 // get local json clone
                                 String localJson = jsonSettings;
-                                JSONObject obj = new JSONObject(localJson);
+                                JSONArray obj = new JSONObject(localJson).getJSONArray("settings");
 
                                 // get response json clone
                                 String responseJson = response.toString();
-                                JSONObject obj2 = new JSONObject(responseJson);
+                                JSONArray obj2 = new JSONObject(responseJson).getJSONArray("settings");
 
                                 // remove token from objects to compare
-                                obj.remove("csrfmiddlewaretoken");
-                                obj2.remove("csrfmiddlewaretoken");
+                                obj.remove(obj.length() - 1);
+                                obj2.remove(obj2.length() - 1);
 
                                 localJson = obj.toString();
                                 responseJson = obj2.toString();
 
-                                if (jsonSettings == null || !localJson.equals(responseJson)) {
+                                if (!localJson.equals(responseJson)) {
+
+                                    System.out.println("OPS");
 
                                     PreferenceManager.getDefaultSharedPreferences(view.getContext()).edit()
                                             .remove("settings").apply();

@@ -9,7 +9,6 @@ import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -43,7 +42,6 @@ public class ManageFragment extends Fragment {
     SharedPreferences settings;
     String domain;
     String sessionid;
-    ListView listView;
     TextView title;
     Snackbar snack;
     RecyclerView recyclerView;
@@ -73,16 +71,14 @@ public class ManageFragment extends Fragment {
         recyclerView.setLayoutManager(llm);
 
         try {
-            if (isOnline()) {
-                getDashbord(view, url, 1);
+
+            getDashbord(view, url, 1);
+            if (isOnline())
                 handler.postDelayed(() -> {
                     dataDashboard.clear();
                     getDashbord(view, url, 0);
                 }, 1000);
 
-
-            } else
-                getDashbord(view, url, 1);
         } catch (Exception e) {
             getDashbord(view, url, 0);
         }
