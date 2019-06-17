@@ -7,7 +7,7 @@ public class DataSettings {
     public final String value;
 
 
-    DataSettings(String title,String second_title, String value) {
+    DataSettings(String title, String second_title, String value) {
         this.title = title;
         this.value = value;
         this.second_title = second_title;

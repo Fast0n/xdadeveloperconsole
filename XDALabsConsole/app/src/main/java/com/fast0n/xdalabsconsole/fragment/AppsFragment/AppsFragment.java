@@ -121,8 +121,7 @@ public class AppsFragment extends Fragment {
                 SnackbarHelper.configSnackbar(view.getContext(), snack);
                 snack.show();
             }
-        }
-        else {
+        } else {
             RequestQueue queue = Volley.newRequestQueue(context);
             queue.getCache().clear();
             JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, url, null,
@@ -157,29 +156,29 @@ public class AppsFragment extends Fragment {
                                 ca = new CustomAdapterAppsFragment(context, dataApps);
                                 recyclerView.setAdapter(ca);
 
-                                snack = Snackbar.make(view,"Apps aggiornate", Snackbar.LENGTH_SHORT);
+                                snack = Snackbar.make(view, "Apps aggiornate", Snackbar.LENGTH_SHORT);
                                 SnackbarHelper.configSnackbar(view.getContext(), snack);
                                 snack.show();
 
                             }
 
                         } catch (JSONException e) {
-                            snack = Snackbar.make(view,"API error", Snackbar.LENGTH_LONG);
+                            snack = Snackbar.make(view, "API error", Snackbar.LENGTH_LONG);
                             SnackbarHelper.configSnackbar(view.getContext(), snack);
                             snack.show();
                         }
 
                     }, e -> {
 
-                        snack = Snackbar.make(
-                                view,
-                                "API error",
-                                Snackbar.LENGTH_LONG
-                        );
-                        SnackbarHelper.configSnackbar(view.getContext(), snack);
-                        snack.show();
+                snack = Snackbar.make(
+                        view,
+                        "API error",
+                        Snackbar.LENGTH_LONG
+                );
+                SnackbarHelper.configSnackbar(view.getContext(), snack);
+                snack.show();
 
-                    });
+            });
 
             getRequest.setRetryPolicy(new RetryPolicy() {
                 @Override

@@ -163,7 +163,7 @@ public class ManageFragment extends Fragment {
                                 ca = new CustomAdapterManagerFragment(context, dataDashboard);
                                 recyclerView.setAdapter(ca);
 
-                                snack = Snackbar.make(view,"Dashboard aggiornata", Snackbar.LENGTH_SHORT);
+                                snack = Snackbar.make(view, "Dashboard aggiornata", Snackbar.LENGTH_SHORT);
                                 SnackbarHelper.configSnackbar(view.getContext(), snack);
                                 snack.show();
 

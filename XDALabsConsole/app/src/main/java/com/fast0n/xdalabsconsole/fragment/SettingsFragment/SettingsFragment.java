@@ -4,21 +4,17 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.graphics.Rect;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -41,12 +37,13 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-import static androidx.constraintlayout.widget.Constraints.TAG;
-
 public class SettingsFragment extends Fragment {
 
+    final List<DataSettings> dataSettings = new ArrayList<>();
     String theme;
     TextView info, title_developer2;
+    RecyclerView recyclerView;
+    CustomAdapterSettingsFragment ca;
     private Context context;
     private SharedPreferences settings;
     private SharedPreferences.Editor editor;
@@ -55,17 +52,10 @@ public class SettingsFragment extends Fragment {
     // declare objects
     private EditText edt_name, edt_email, edt_bitcoin, edt_paypal;
 
-    RecyclerView recyclerView;
-    final List<DataSettings> dataSettings = new ArrayList<>();
-    CustomAdapterSettingsFragment ca;
-
-
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_settings, container, false);
-
 
 
         recyclerView = view.findViewById(R.id.recycler_view);
@@ -79,12 +69,10 @@ public class SettingsFragment extends Fragment {
 
 
         for (int j = 1; j < 5; j++) {
-            dataSettings.add(new DataSettings(j+"", j+"pippo", j+""));
+            dataSettings.add(new DataSettings(j + "", j + "pippo", j + ""));
         }
-        ca = new CustomAdapterSettingsFragment(context, dataSettings);
+        ca = new CustomAdapterSettingsFragment(getContext(), dataSettings);
         recyclerView.setAdapter(ca);
-
-
 
 
         context = getActivity().getApplicationContext();
@@ -152,22 +140,8 @@ public class SettingsFragment extends Fragment {
 */
         btn_save.setOnClickListener(view1 -> {
 
-
-
-            recyclerView.setOnTouchListener((v, event) -> {
-
-
-
-                TextView txtStatusChange = (TextView)v.findViewById(R.id.value);
-                txtStatusChange.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Log.e(TAG, "hello text " + txtStatusChange.getText().toString() + " TAG " + txtStatusChange.getTag().toString());
-
-                    }
-                });
-                return false;
-            });
+            int position = 0;
+            String edtText = PreferenceManager.getDefaultSharedPreferences(view.getContext()).getString("edtText_" + position, null);
 
 /*
             String name = edt_name.getText().toString();
@@ -204,7 +178,6 @@ public class SettingsFragment extends Fragment {
 
 
         });
-
 
 
         return view;
@@ -244,14 +217,13 @@ public class SettingsFragment extends Fragment {
 
 
             } catch (JSONException e) {
-                snack = Snackbar.make(view,"Data error", Snackbar.LENGTH_LONG);
+                snack = Snackbar.make(view, "Data error", Snackbar.LENGTH_LONG);
                 SnackbarHelper.configSnackbar(view.getContext(), snack);
                 snack.show();
             }
 
 
-        }
-        else {
+        } else {
 
             RequestQueue queue = Volley.newRequestQueue(context);
             queue.getCache().clear();
@@ -279,7 +251,7 @@ public class SettingsFragment extends Fragment {
                                 localJson = obj.toString();
                                 responseJson = obj2.toString();
 
-                                if (!localJson.equals(responseJson)){
+                                if (!localJson.equals(responseJson)) {
 
                                     PreferenceManager.getDefaultSharedPreferences(view.getContext()).edit()
                                             .remove("settings").apply();
@@ -315,14 +287,14 @@ public class SettingsFragment extends Fragment {
 
 
                         } catch (JSONException e) {
-                            snack = Snackbar.make(view,"API error", Snackbar.LENGTH_LONG);
+                            snack = Snackbar.make(view, "API error", Snackbar.LENGTH_LONG);
                             SnackbarHelper.configSnackbar(view.getContext(), snack);
                             snack.show();
                         }
 
                     },
                     e -> {
-                        snack = Snackbar.make(view,"API error", Snackbar.LENGTH_LONG);
+                        snack = Snackbar.make(view, "API error", Snackbar.LENGTH_LONG);
                         SnackbarHelper.configSnackbar(view.getContext(), snack);
                         snack.show();
 

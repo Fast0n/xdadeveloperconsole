@@ -1,6 +1,9 @@
 package com.fast0n.xdalabsconsole.fragment.SettingsFragment;
 
 import android.content.Context;
+import android.preference.PreferenceManager;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +21,7 @@ import java.util.List;
 public class CustomAdapterSettingsFragment extends RecyclerView.Adapter<CustomAdapterSettingsFragment.MyViewHolder> {
 
     private final List<DataSettings> infoList;
-    private final Context context;
+    private Context context;
 
     CustomAdapterSettingsFragment(Context context, List<DataSettings> infoList) {
         this.context = context;
@@ -39,6 +42,25 @@ public class CustomAdapterSettingsFragment extends RecyclerView.Adapter<CustomAd
         else
             holder.txtTitle.setVisibility(View.GONE);
 
+
+        holder.edtValue.addTextChangedListener(new TextWatcher() {
+
+            // the user's changes are saved here
+            public void onTextChanged(CharSequence c, int start, int before, int count) {
+
+                PreferenceManager.getDefaultSharedPreferences(context).edit()
+                        .putString("edtText_" + position, c.toString()).apply();
+
+            }
+
+            public void beforeTextChanged(CharSequence c, int start, int count, int after) {
+                // this space intentionally left blank
+            }
+
+            public void afterTextChanged(Editable c) {
+                // this one too
+            }
+        });
     }
 
 
