@@ -29,7 +29,6 @@ public class CustomAdapterSettingsFragment extends RecyclerView.Adapter<CustomAd
 
     }
 
-
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         DataSettings c = infoList.get(position);
@@ -37,19 +36,32 @@ public class CustomAdapterSettingsFragment extends RecyclerView.Adapter<CustomAd
         holder.edtValue.setText(c.value);
         holder.txtSecondTitle.setText(c.second_title);
         holder.txtTitle.setText(c.title);
-        if (c.title.equals("1") || c.title.equals("3"))
+        holder.txtAlert.setText(c.alert);
+
+        if (c.title != null)
             holder.txtTitle.setVisibility(View.VISIBLE);
         else
             holder.txtTitle.setVisibility(View.GONE);
 
+        if (c.alert != null)
+            holder.txtAlert.setVisibility(View.VISIBLE);
+        else
+            holder.txtAlert.setVisibility(View.GONE);
+
+        if (c.idName != null){
+            int count = PreferenceManager.getDefaultSharedPreferences(context).getInt("edtTextCounter", 0);
+            PreferenceManager.getDefaultSharedPreferences(context).edit().putInt("edtTextCounter", count + 1).apply();
+            PreferenceManager.getDefaultSharedPreferences(context).edit().putString("edtTextId" + position, c.idName).apply();
+            PreferenceManager.getDefaultSharedPreferences(context).edit().putString("edtText" + position, c.idName + "=" + c.value).apply();
+        }
 
         holder.edtValue.addTextChangedListener(new TextWatcher() {
 
             // the user's changes are saved here
             public void onTextChanged(CharSequence c, int start, int before, int count) {
 
-                PreferenceManager.getDefaultSharedPreferences(context).edit()
-                        .putString("edtText_" + position, c.toString()).apply();
+                String id = PreferenceManager.getDefaultSharedPreferences(context).getString("edtTextId" + position, null);
+                PreferenceManager.getDefaultSharedPreferences(context).edit().putString("edtText" + position, id + "=" + c.toString()).apply();
 
             }
 
@@ -78,7 +90,7 @@ public class CustomAdapterSettingsFragment extends RecyclerView.Adapter<CustomAd
 
     class MyViewHolder extends RecyclerView.ViewHolder {
 
-        TextView txtTitle, txtSecondTitle;
+        TextView txtTitle, txtSecondTitle, txtAlert;
         EditText edtValue;
 
         MyViewHolder(View view) {
@@ -87,6 +99,8 @@ public class CustomAdapterSettingsFragment extends RecyclerView.Adapter<CustomAd
             txtTitle = view.findViewById(R.id.title);
             edtValue = view.findViewById(R.id.value);
             txtSecondTitle = view.findViewById(R.id.second_title);
+            txtAlert = view.findViewById(R.id.title_developer2);
+
         }
     }
 }

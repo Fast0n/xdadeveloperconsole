@@ -166,24 +166,59 @@ def settings(sessionid):
     soup = BeautifulSoup(response, "html.parser")
 
     # get element to parse
-    title = soup.find("div", {"id": "page-title"}).get_text().strip()
+    title = soup.find("div", {"id": "page-title"}).find("h2")
 
     groups = soup.find_all("div", {"class": "form-group"})
 
     # insert parsed value in dict struct
-    data["title"] = title
+    data["settings"] = []
 
-    for group in groups:
-        input = group.find("input")
-        camp = input.get("name")
-        data[camp] = {}
-        data[camp]["value"] = input.get("value")
-        if group.find("div", {"class": "alert"}):
-            data[camp]["alert"] = group.find("div", {"class": "alert"}).get_text().strip()
+    data["settings"].append(
+        {
+            "name": "title",
+            "value": title.get_text().strip(),
+            "tag": title.name
+        }
+    )
 
-    csrf = soup.find("input", {"type": ["hidden"]})
-    data[csrf.get("name")] = {}
-    data[csrf.get("name")]["value"] = csrf.get("value")
+    form_elements = soup.find("form", {"class": ["form-horizontal", "row"]}).find_all()
+
+    for element in form_elements:
+        add = {}
+        if element.get("class") and element.get("class")[0] == "form-group":
+            input = element.find("input")
+
+            id_name = input.get("name")
+            name = element.find("label", {"class": ["col-sm-1", "control-label"]}).get_text().strip()
+            value = input.get("value")
+            alert = element.find("div", {"class": "alert"})
+
+            add["name"] = name
+            add["id_name"] = id_name
+            add["value"] = value
+            add["tag"] = element.name
+
+            if alert: add["alert"] = alert.get_text().strip()
+
+        elif element.name == "h2":
+            value = element.get_text().strip()
+            add["value"] = value
+            add["name"] = "title"
+            add["tag"] = element.name
+
+        if add: data["settings"].append(add)
+
+    csrf = soup.find("input", {"type": "hidden"})
+    add = {}
+    name = csrf.get("name")
+    value = csrf.get("value")
+
+    add["name"] = name
+    add["id_name"] = name
+    add["value"] = value
+    add["tag"] = csrf.name
+
+    data["settings"].append(add)
 
     return data
 
@@ -200,31 +235,7 @@ def change_settings(sessionid, data):
 
     response = r.post("https://labs.xda-developers.com/manage/settings", headers=headers, cookies=cookies, data=data, allow_redirects=True).text
 
-    result = {}
-
-    soup = BeautifulSoup(response, "html.parser")
-
-    # get element to parse
-    title = soup.find("div", {"id": "page-title"}).get_text().strip()
-
-    groups = soup.find_all("div", {"class": "form-group"})
-
-    # insert parsed value in dict struct
-    result["title"] = title
-
-    for group in groups:
-        input = group.find("input")
-        camp = input.get("name")
-        result[camp] = {}
-        result[camp]["value"] = input.get("value")
-        if group.find("div", {"class": "alert"}):
-            result[camp]["alert"] = group.find("div", {"class": "alert"}).get_text().strip()
-
-    csrf = soup.find("input", {"type": ["hidden"]})
-    result[csrf.get("name")] = {}
-    result[csrf.get("name")]["value"] = csrf.get("value")
-
-    return result
+    return settings(sessionid)
 
 def apps(sessionid):
 

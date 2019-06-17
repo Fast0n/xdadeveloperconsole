@@ -31,6 +31,7 @@ import com.fast0n.xdalabsconsole.R;
 import com.fast0n.xdalabsconsole.java.SnackbarHelper;
 import com.google.android.material.snackbar.Snackbar;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -68,27 +69,15 @@ public class SettingsFragment extends Fragment {
         recyclerView.setLayoutManager(llm);
 
 
-        for (int j = 1; j < 5; j++) {
-            dataSettings.add(new DataSettings(j + "", j + "pippo", j + ""));
-        }
-        ca = new CustomAdapterSettingsFragment(getContext(), dataSettings);
-        recyclerView.setAdapter(ca);
-
-
         context = getActivity().getApplicationContext();
         settings = context.getSharedPreferences("sharedPreferences", 0);
         editor = settings.edit();
 
-  /*
+
         domain = getResources().getString(R.string.url);
 
         String sessionid = settings.getString("sessionid", null);
 
-        edt_name = view.findViewById(R.id.edt_name);
-        edt_email = view.findViewById(R.id.edt_email);
-        edt_bitcoin = view.findViewById(R.id.edt_bitcoin);
-        edt_paypal = view.findViewById(R.id.edt_paypal);
-        */
         info = view.findViewById(R.id.info);
         title_developer2 = view.findViewById(R.id.title_developer2);
 
@@ -124,39 +113,38 @@ public class SettingsFragment extends Fragment {
             }
         });
 
-/*
+
         String checkSessionUrl = String.format("%s/settings?sessionid=%s", domain, sessionid);
 
+
         try {
-            if (isOnline()) {
-                settings(view, checkSessionUrl, 0);
+            if (isOnline())
+                handler.postDelayed(() -> {
+                    dataSettings.clear();
+                    settings(view, checkSessionUrl, 0);
+                }, 1000);
+            else
                 settings(view, checkSessionUrl, 1);
-            } else
-                settings(view, checkSessionUrl, 1);
+
         } catch (Exception e) {
             settings(view, checkSessionUrl, 0);
         }
 
-*/
         btn_save.setOnClickListener(view1 -> {
 
-            int position = 0;
-            String edtText = PreferenceManager.getDefaultSharedPreferences(view.getContext()).getString("edtText_" + position, null);
+            String saveUrl = String.format("%s/change_settings?sessionid=%s&", domain, sessionid);
 
-/*
-            String name = edt_name.getText().toString();
-            String email = edt_email.getText().toString();
-            String bitcoin = edt_bitcoin.getText().toString();
-            String paypal = edt_paypal.getText().toString();
-            String token = settings.getString("token", null);
+            int n = PreferenceManager.getDefaultSharedPreferences(context).getInt("edtTextCounter", 0);
 
-            String saveUrl = String.format(
-                    "%s/change_settings?sessionid=%s&display_name=%s&support_email=%s&bitcoin_address=%s&paypal_address=%s&csrfmiddlewaretoken=%s",
-                    domain, sessionid, name, email, bitcoin, paypal, token
-            );
+            for(int i = 0; i < n; i++){
+                String value = PreferenceManager.getDefaultSharedPreferences(view.getContext()).getString("edtText" + i, null);
+                saveUrl += value;
+                if (i != n - 1) saveUrl += "&";
+            }
+            saveUrl += String.format("&csrfmiddlewaretoken=%s", settings.getString("token", null));
 
+            dataSettings.clear();
             settings(view, saveUrl, 0);
-*/
         });
 
         info.setOnClickListener(view1 -> {
@@ -199,21 +187,47 @@ public class SettingsFragment extends Fragment {
 
                 JSONObject response = new JSONObject(jsonSettings);
 
-                // get json values
-                JSONObject name = response.getJSONObject("display_name");
-                JSONObject email = response.getJSONObject("support_email");
-                JSONObject bitcoin = response.getJSONObject("bitcoin_address");
-                JSONObject paypal = response.getJSONObject("paypal_address");
-                JSONObject token = response.getJSONObject("csrfmiddlewaretoken");
+                JSONArray array = response.getJSONArray("settings");
 
-                // insert json values
-                edt_name.setText(name.getString("value"));
-                edt_email.setText(email.getString("value"));
-                edt_bitcoin.setText(bitcoin.getString("value"));
-                edt_paypal.setText(paypal.getString("value"));
-                title_developer2.setText(paypal.getString("alert"));
-                editor.putString("token", token.getString("value"));
-                editor.apply();
+                int n = array.length();
+
+                // set recycle view
+                String title = null;
+                String alert = null;
+                String id = null;
+
+                // set recycle view
+                for (int j = 0; j < n; j++) {
+                    JSONObject element= array.getJSONObject(j);
+
+                    String name = element.getString("name");
+                    String value = element.getString("value");
+                    if (name.equals("csrfmiddlewaretoken")){
+                        editor.putString("token", value);
+                        editor.apply();
+                    }
+                    else{
+
+                        if (element.has("alert")){
+                            alert = element.getString("alert");
+                        }
+                        if (element.has("id_name")){
+                            id = element.getString("id_name");
+                        }
+                        if (element.getString("tag").equals("h2")){
+                            title = element.getString("value");
+                        }
+                        else{
+                            dataSettings.add(new DataSettings(id, title, name, value, alert));
+                            title = null;
+                            alert = null;
+                            id = null;
+                        }
+
+                    }
+                }
+                ca = new CustomAdapterSettingsFragment(getContext(), dataSettings);
+                recyclerView.setAdapter(ca);
 
 
             } catch (JSONException e) {
@@ -223,7 +237,8 @@ public class SettingsFragment extends Fragment {
             }
 
 
-        } else {
+        }
+        else {
 
             RequestQueue queue = Volley.newRequestQueue(context);
             queue.getCache().clear();
@@ -251,7 +266,7 @@ public class SettingsFragment extends Fragment {
                                 localJson = obj.toString();
                                 responseJson = obj2.toString();
 
-                                if (!localJson.equals(responseJson)) {
+                                if (jsonSettings == null || !localJson.equals(responseJson)) {
 
                                     PreferenceManager.getDefaultSharedPreferences(view.getContext()).edit()
                                             .remove("settings").apply();
@@ -260,22 +275,50 @@ public class SettingsFragment extends Fragment {
                                     PreferenceManager.getDefaultSharedPreferences(view.getContext()).edit()
                                             .putString("settings", response.toString()).apply();
 
-                                    // get json values
-                                    JSONObject name = response.getJSONObject("display_name");
-                                    JSONObject email = response.getJSONObject("support_email");
-                                    JSONObject bitcoin = response.getJSONObject("bitcoin_address");
-                                    JSONObject paypal = response.getJSONObject("paypal_address");
-                                    JSONObject token = response.getJSONObject("csrfmiddlewaretoken");
+                                    JSONArray array = response.getJSONArray("settings");
 
-                                    // insert json values
-                                    edt_name.setText(name.getString("value"));
-                                    edt_email.setText(email.getString("value"));
-                                    edt_bitcoin.setText(bitcoin.getString("value"));
-                                    edt_paypal.setText(paypal.getString("value"));
-                                    title_developer2.setText(paypal.getString("alert"));
+                                    int n = array.length();
 
-                                    editor.putString("token", token.getString("value"));
-                                    editor.apply();
+                                    // set recycle view
+                                    String title = null;
+                                    String alert = null;
+                                    String id = null;
+
+                                    for (int j = 0; j < n; j++) {
+                                        JSONObject element= array.getJSONObject(j);
+
+                                        String name = element.getString("name");
+                                        String value = element.getString("value");
+                                        if (name.equals("csrfmiddlewaretoken")){
+                                            editor.putString("token", value);
+                                            editor.apply();
+                                        }
+                                        else{
+
+                                            if (element.has("alert")){
+                                                alert = element.getString("alert");
+                                            }
+                                            if (element.has("id_name")){
+                                                id = element.getString("id_name");
+                                            }
+                                            if (element.getString("tag").equals("h2")){
+                                                title = element.getString("value");
+                                            }
+                                            else{
+                                                dataSettings.add(new DataSettings(id, title, name, value, alert));
+                                                title = null;
+                                                alert = null;
+                                                id = null;
+                                            }
+
+                                        }
+                                    }
+
+                                    PreferenceManager.getDefaultSharedPreferences(context).edit()
+                                            .remove("edtTextCounter").apply();
+
+                                    ca = new CustomAdapterSettingsFragment(context, dataSettings);
+                                    recyclerView.setAdapter(ca);
 
                                     // show success message
                                     snack = Snackbar.make(view, getString(R.string.alert1), Snackbar.LENGTH_LONG);
