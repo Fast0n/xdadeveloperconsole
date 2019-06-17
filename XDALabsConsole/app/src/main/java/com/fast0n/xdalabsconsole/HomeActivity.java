@@ -12,14 +12,19 @@ import androidx.fragment.app.Fragment;
 
 import com.fast0n.xdalabsconsole.fragment.AppsFragment.AppsFragment;
 import com.fast0n.xdalabsconsole.fragment.ManagerFragment.ManageFragment;
-import com.fast0n.xdalabsconsole.fragment.SettingsFragment;
+import com.fast0n.xdalabsconsole.fragment.SettingsFragment.SettingsFragment;
 import com.fast0n.xdalabsconsole.fragment.XposedFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent;
+import net.yslibrary.android.keyboardvisibilityevent.Unregistrar;
 
 public class HomeActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
 
     SharedPreferences settings;
     SharedPreferences.Editor editor;
+    BottomNavigationView navView;
+    Unregistrar mUnregistrar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,10 +42,14 @@ public class HomeActivity extends AppCompatActivity implements BottomNavigationV
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        BottomNavigationView navView = findViewById(R.id.nav_view);
+        navView = findViewById(R.id.nav_view);
         navView.setOnNavigationItemSelectedListener(this);
 
         ImageButton imageButton = findViewById(R.id.imageButton);
+
+
+        mUnregistrar = KeyboardVisibilityEvent.registerEventListener(this, this::updateKeyboardStatusText);
+        updateKeyboardStatusText(KeyboardVisibilityEvent.isKeyboardVisible(this));
 
         imageButton.setOnClickListener(view -> {
             loadFragment(new SettingsFragment());
@@ -50,6 +59,19 @@ public class HomeActivity extends AppCompatActivity implements BottomNavigationV
         });
 
         loadFragment(new ManageFragment());
+
+    }
+
+    /**
+     * Nascondi layout se la tastierà è aperta
+     */
+    private void updateKeyboardStatusText(boolean isOpen) {
+
+        if (isOpen)
+            navView.setVisibility(View.GONE);
+        else
+            navView.setVisibility(View.VISIBLE);
+
 
     }
 

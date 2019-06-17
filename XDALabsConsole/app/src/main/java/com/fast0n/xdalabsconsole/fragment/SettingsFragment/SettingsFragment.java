@@ -1,24 +1,30 @@
-package com.fast0n.xdalabsconsole.fragment;
+package com.fast0n.xdalabsconsole.fragment.SettingsFragment;
 
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Rect;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -32,6 +38,11 @@ import com.google.android.material.snackbar.Snackbar;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import static androidx.constraintlayout.widget.Constraints.TAG;
+
 public class SettingsFragment extends Fragment {
 
     String theme;
@@ -44,16 +55,43 @@ public class SettingsFragment extends Fragment {
     // declare objects
     private EditText edt_name, edt_email, edt_bitcoin, edt_paypal;
 
+    RecyclerView recyclerView;
+    final List<DataSettings> dataSettings = new ArrayList<>();
+    CustomAdapterSettingsFragment ca;
+
+
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_settings, container, false);
 
+
+
+        recyclerView = view.findViewById(R.id.recycler_view);
+
+        // initial recycle view
+        recyclerView.setHasFixedSize(true);
+        LinearLayoutManager llm = new LinearLayoutManager(context);
+        llm.setOrientation(RecyclerView.VERTICAL);
+        recyclerView.setNestedScrollingEnabled(false);
+        recyclerView.setLayoutManager(llm);
+
+
+        for (int j = 1; j < 5; j++) {
+            dataSettings.add(new DataSettings(j+"", j+"pippo", j+""));
+        }
+        ca = new CustomAdapterSettingsFragment(context, dataSettings);
+        recyclerView.setAdapter(ca);
+
+
+
+
         context = getActivity().getApplicationContext();
         settings = context.getSharedPreferences("sharedPreferences", 0);
         editor = settings.edit();
 
-
+  /*
         domain = getResources().getString(R.string.url);
 
         String sessionid = settings.getString("sessionid", null);
@@ -62,6 +100,7 @@ public class SettingsFragment extends Fragment {
         edt_email = view.findViewById(R.id.edt_email);
         edt_bitcoin = view.findViewById(R.id.edt_bitcoin);
         edt_paypal = view.findViewById(R.id.edt_paypal);
+        */
         info = view.findViewById(R.id.info);
         title_developer2 = view.findViewById(R.id.title_developer2);
 
@@ -97,7 +136,7 @@ public class SettingsFragment extends Fragment {
             }
         });
 
-
+/*
         String checkSessionUrl = String.format("%s/settings?sessionid=%s", domain, sessionid);
 
         try {
@@ -110,9 +149,27 @@ public class SettingsFragment extends Fragment {
             settings(view, checkSessionUrl, 0);
         }
 
-
+*/
         btn_save.setOnClickListener(view1 -> {
 
+
+
+            recyclerView.setOnTouchListener((v, event) -> {
+
+
+
+                TextView txtStatusChange = (TextView)v.findViewById(R.id.value);
+                txtStatusChange.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Log.e(TAG, "hello text " + txtStatusChange.getText().toString() + " TAG " + txtStatusChange.getTag().toString());
+
+                    }
+                });
+                return false;
+            });
+
+/*
             String name = edt_name.getText().toString();
             String email = edt_email.getText().toString();
             String bitcoin = edt_bitcoin.getText().toString();
@@ -125,7 +182,7 @@ public class SettingsFragment extends Fragment {
             );
 
             settings(view, saveUrl, 0);
-
+*/
         });
 
         info.setOnClickListener(view1 -> {
@@ -149,8 +206,10 @@ public class SettingsFragment extends Fragment {
         });
 
 
+
         return view;
     }
+
 
     private boolean isOnline() {
         ConnectivityManager cm = (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -275,5 +334,6 @@ public class SettingsFragment extends Fragment {
         }
 
     }
+
 
 }
