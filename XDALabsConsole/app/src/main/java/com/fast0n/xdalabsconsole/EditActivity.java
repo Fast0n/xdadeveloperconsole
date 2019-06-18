@@ -13,11 +13,13 @@ import androidx.fragment.app.Fragment;
 
 import com.fast0n.xdalabsconsole.fragment.AppsFragment.AppsFragment;
 import com.fast0n.xdalabsconsole.fragment.DetailsFragment;
+import com.fast0n.xdalabsconsole.fragment.DetailsInterface;
 import com.fast0n.xdalabsconsole.fragment.ManagerFragment.ManageFragment;
 import com.fast0n.xdalabsconsole.fragment.ScreenshotFragment;
 import com.fast0n.xdalabsconsole.fragment.SettingsFragment.SettingsFragment;
 import com.fast0n.xdalabsconsole.fragment.XposedFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent;
 import net.yslibrary.android.keyboardvisibilityevent.Unregistrar;
@@ -29,11 +31,14 @@ public class EditActivity extends AppCompatActivity implements BottomNavigationV
     BottomNavigationView navView;
     Unregistrar mUnregistrar;
     Bundle extras;
+    FloatingActionButton save;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         settings = getSharedPreferences("sharedPreferences", 0);
         editor = settings.edit();
+
 
         String theme = settings.getString("toggleTheme", null);
 
@@ -46,12 +51,20 @@ public class EditActivity extends AppCompatActivity implements BottomNavigationV
         setContentView(R.layout.activity_edit);
 
         navView = findViewById(R.id.nav_view);
+        save = findViewById(R.id.fab);
         navView.setOnNavigationItemSelectedListener(this);
 
         mUnregistrar = KeyboardVisibilityEvent.registerEventListener(this, this::updateKeyboardStatusText);
         updateKeyboardStatusText(KeyboardVisibilityEvent.isKeyboardVisible(this));
 
+        save.setOnClickListener(v -> {
 
+            Fragment fragment = new DetailsInterface();
+            setListener((DetailsInterface) fragment);
+            listener.changeApp(fragment.getView());
+
+
+        });
 
         loadFragment( new DetailsFragment());
 
@@ -75,7 +88,7 @@ public class EditActivity extends AppCompatActivity implements BottomNavigationV
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
             extras = getIntent().getExtras();
             Bundle bundle = new Bundle();
-            bundle.putString("idApp",extras.getString("idApp"));
+            bundle.putString("idApp", extras.getString("idApp"));
             fragment.setArguments(bundle);
             return true;
         }
@@ -101,5 +114,11 @@ public class EditActivity extends AppCompatActivity implements BottomNavigationV
         return loadFragment(fragment);
     }
 
+    private DetailsInterface listener ;
+
+    public void setListener(DetailsInterface listener)
+    {
+        this.listener = listener;
+    }
 
 }

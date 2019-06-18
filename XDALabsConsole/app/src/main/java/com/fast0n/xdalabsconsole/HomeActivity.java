@@ -98,8 +98,8 @@ public class HomeActivity extends AppCompatActivity implements BottomNavigationV
                 fragment = new AppsFragment();
                 break;
             case R.id.navigation_xposed:
-                //fragment = new XposedFragment();
-                startActivity(new Intent(this, EditActivity.class).putExtra("idApp", "5d826e0d-2b11-403c-9865-e28dc8092bb1" ));
+                fragment = new XposedFragment();
+                // startActivity(new Intent(this, EditActivity.class).putExtra("idApp", "5d826e0d-2b11-403c-9865-e28dc8092bb1" ));
                 break;
         }
 

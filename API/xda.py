@@ -245,7 +245,7 @@ def apps(sessionid):
     response = r.get("https://labs.xda-developers.com/manage/apps/", cookies=cookies).text
 
     soup = BeautifulSoup(response, "html.parser")
-    rows = soup.find_all("div", {"class": "app-listing-row"})
+    rows = soup.find_all("div", {"class": ["col-md-2", "app-entry"]})
 
     title = soup.find("div", {"id": "page-title"}).get_text().strip()
 
@@ -271,9 +271,12 @@ def get_app(sessionid, id):
     soup = BeautifulSoup(response, "html.parser")
 
     app = soup.find("div", {"id": "app"})
+
     elements = app.find_all("div", {"class", "form-group"})
 
-    result = {}
+    result = {
+        "app": []
+    }
 
     # insert token
     token = app.find("input", {"type": "hidden"})
@@ -284,8 +287,8 @@ def get_app(sessionid, id):
     for element in elements:
         label = element.find("label").get_text().split('\n')[0]
         key = label.lower()
-        result[key] = {}
-        result[key]["title"] = label
+        add = {}
+        add["title"] = label
 
         # create var to check
         text = element.find("input", {"type": "text"})
@@ -296,24 +299,36 @@ def get_app(sessionid, id):
 
         # checking
         if text:
-            result[key]["text"] = text.get("value")
+            add["value"] = text.get("value")
+            add["id"] = text.get("name")
+            add["type"] = text.name
         elif textarea:
-            result[key]["text"] = textarea.get_text()
+            add["value"] = textarea.get_text()
+            add["id"] = textarea.get("name")
+            add["type"] = textarea.name
         elif checkbox:
             if checkbox.get("checked") == "checked":
-                result[key]["checked"] = True
+                add["value"] = True
             else:
-                result[key]["checked"] = False
+                add["value"] = False
+            add["type"] = checkbox.get("type")
+            add["id"] = checkbox.get("name")
         elif select:
             options = select.find_all("option")
-            result[key]["options"] = []
+            add["options"] = []
             for option in options:
                 if option.get("selected") == "selected":
-                    result[key]["selected"] = option.get_text()
+                    add["value"] = option.get_text()
                 else:
-                    result[key]["options"].append(option.get_text())
+                    add["options"].append(option.get_text())
+            add["id"] = select.get("name")
+            add["type"] = select.name
         elif a:
-            result[key]["img"] = a.get("href")
+            add["id"] = a.get("name")
+            add["value"] = a.get("href")
+            add["type"] = a.name
+
+        result["app"].append(add)
 
     return result
 

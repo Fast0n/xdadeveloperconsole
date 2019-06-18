@@ -44,6 +44,7 @@ public class SettingsFragment extends Fragment {
     TextView info, title_developer2;
     RecyclerView recyclerView;
     CustomAdapterSettingsFragment ca;
+
     private Context context;
     private SharedPreferences settings;
     private SharedPreferences.Editor editor;
@@ -55,6 +56,8 @@ public class SettingsFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_settings, container, false);
 
+        context = getActivity().getApplicationContext();
+
         recyclerView = view.findViewById(R.id.recycler_view);
 
         // initial recycle view
@@ -64,7 +67,6 @@ public class SettingsFragment extends Fragment {
         recyclerView.setNestedScrollingEnabled(false);
         recyclerView.setLayoutManager(llm);
 
-        context = getActivity().getApplicationContext();
         settings = context.getSharedPreferences("sharedPreferences", 0);
         editor = settings.edit();
 
@@ -160,7 +162,6 @@ public class SettingsFragment extends Fragment {
 
         return view;
     }
-
 
     private boolean isOnline() {
         ConnectivityManager cm = (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
