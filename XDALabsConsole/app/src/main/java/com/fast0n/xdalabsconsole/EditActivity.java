@@ -1,8 +1,8 @@
 package com.fast0n.xdalabsconsole;
 
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
@@ -12,7 +12,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import com.fast0n.xdalabsconsole.fragment.AppsFragment.AppsFragment;
+import com.fast0n.xdalabsconsole.fragment.DetailsFragment;
 import com.fast0n.xdalabsconsole.fragment.ManagerFragment.ManageFragment;
+import com.fast0n.xdalabsconsole.fragment.ScreenshotFragment;
 import com.fast0n.xdalabsconsole.fragment.SettingsFragment.SettingsFragment;
 import com.fast0n.xdalabsconsole.fragment.XposedFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -20,13 +22,13 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent;
 import net.yslibrary.android.keyboardvisibilityevent.Unregistrar;
 
-public class HomeActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
+public class EditActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
 
     SharedPreferences settings;
     SharedPreferences.Editor editor;
     BottomNavigationView navView;
     Unregistrar mUnregistrar;
-
+    Bundle extras;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -41,25 +43,17 @@ public class HomeActivity extends AppCompatActivity implements BottomNavigationV
             setTheme(R.style.DarkTheme);
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_home);
+        setContentView(R.layout.activity_edit);
 
         navView = findViewById(R.id.nav_view);
         navView.setOnNavigationItemSelectedListener(this);
 
-        ImageButton imageButton = findViewById(R.id.imageButton);
-
-
         mUnregistrar = KeyboardVisibilityEvent.registerEventListener(this, this::updateKeyboardStatusText);
         updateKeyboardStatusText(KeyboardVisibilityEvent.isKeyboardVisible(this));
 
-        imageButton.setOnClickListener(view -> {
-            loadFragment(new SettingsFragment());
 
-            navView.getMenu().findItem(R.id.uncheckedItem).setChecked(true);
-            navView.findViewById(R.id.uncheckedItem).setVisibility(View.GONE);
-        });
 
-        loadFragment(new ManageFragment());
+        loadFragment( new DetailsFragment());
 
     }
 
@@ -79,6 +73,10 @@ public class HomeActivity extends AppCompatActivity implements BottomNavigationV
     private boolean loadFragment(Fragment fragment) {
         if (fragment != null) {
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
+            extras = getIntent().getExtras();
+            Bundle bundle = new Bundle();
+            bundle.putString("idApp",extras.getString("idApp"));
+            fragment.setArguments(bundle);
             return true;
         }
         return false;
@@ -91,15 +89,11 @@ public class HomeActivity extends AppCompatActivity implements BottomNavigationV
         Fragment fragment = null;
 
         switch (item.getItemId()) {
-            case R.id.navigation_manage:
-                fragment = new ManageFragment();
+            case R.id.navigation_details:
+                fragment = new DetailsFragment();
                 break;
-            case R.id.navigation_myapps:
-                fragment = new AppsFragment();
-                break;
-            case R.id.navigation_xposed:
-                //fragment = new XposedFragment();
-                startActivity(new Intent(this, EditActivity.class).putExtra("idApp", "5d826e0d-2b11-403c-9865-e28dc8092bb1" ));
+            case R.id.navigation_screenshot:
+                fragment = new ScreenshotFragment();
                 break;
         }
 
@@ -108,8 +102,4 @@ public class HomeActivity extends AppCompatActivity implements BottomNavigationV
     }
 
 
-    public void onBackPressed() {
-        finishAffinity();
-        System.exit(0);
-    }
 }

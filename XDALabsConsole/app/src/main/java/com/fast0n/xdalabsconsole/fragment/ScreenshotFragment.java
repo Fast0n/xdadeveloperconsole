@@ -11,13 +11,13 @@ import androidx.fragment.app.Fragment;
 
 import com.fast0n.xdalabsconsole.R;
 
-public class XposedFragment extends Fragment {
+public class ScreenshotFragment extends Fragment {
 
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_xposed, container, false);
+        View view = inflater.inflate(R.layout.fragment_screenshot, container, false);
         return view;
     }
 }

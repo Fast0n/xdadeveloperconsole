@@ -27,5 +27,7 @@
     <string name="alert1">Settings updates</string>
     <string name="application_fragment_settings">Application Settings</string>
     <string name="save">Save</string>
+    <string name="title_details">Dettagli</string>
+    <string name="title_screenshot">Schermate</string>
 
 </resources>
