@@ -134,7 +134,7 @@ public class ManageFragment extends Fragment {
 
                             String jsonDashboard = PreferenceManager.getDefaultSharedPreferences(view.getContext()).getString("dashboard", null);
 
-                            if (jsonDashboard != null && !jsonDashboard.equals(response.toString())) {
+                            if (jsonDashboard == null || !jsonDashboard.equals(response.toString())) {
 
                                 PreferenceManager.getDefaultSharedPreferences(view.getContext()).edit()
                                         .remove("dashboard").apply();

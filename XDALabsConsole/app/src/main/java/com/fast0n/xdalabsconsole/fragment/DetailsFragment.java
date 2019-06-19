@@ -126,7 +126,8 @@ public class DetailsFragment extends Fragment {
     }
 
     public void changeApp(View view){
-        System.out.println("OPS");
+        edt1 = view.findViewById(R.id.edt_title);
+        System.out.println("SUCA");
     }
 
 

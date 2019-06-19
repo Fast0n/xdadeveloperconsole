@@ -130,7 +130,7 @@ public class AppsFragment extends Fragment {
 
                             String jsonApp = PreferenceManager.getDefaultSharedPreferences(view.getContext()).getString("apps", null);
 
-                            if (jsonApp != null && !jsonApp.equals(response.toString())) {
+                            if (jsonApp == null || !jsonApp.equals(response.toString())) {
 
                                 PreferenceManager.getDefaultSharedPreferences(view.getContext()).edit()
                                         .remove("apps").apply();

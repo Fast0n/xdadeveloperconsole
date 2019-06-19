@@ -11,7 +11,11 @@ import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.AbsListView;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 
@@ -29,6 +33,7 @@ import com.fast0n.xdalabsconsole.BuildConfig;
 import com.fast0n.xdalabsconsole.R;
 import com.fast0n.xdalabsconsole.java.SnackbarHelper;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.android.material.textfield.TextInputLayout;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -50,19 +55,22 @@ public class SettingsFragment extends Fragment {
     private SharedPreferences.Editor editor;
     private String domain;
     private Snackbar snack;
+    private LinearLayoutManager llm;
+    private RecyclerView rv;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_settings, container, false);
 
+        // region declare init
         context = getActivity().getApplicationContext();
 
         recyclerView = view.findViewById(R.id.recycler_view);
 
         // initial recycle view
         recyclerView.setHasFixedSize(true);
-        LinearLayoutManager llm = new LinearLayoutManager(context);
+        llm = new LinearLayoutManager(context);
         llm.setOrientation(RecyclerView.VERTICAL);
         recyclerView.setNestedScrollingEnabled(false);
         recyclerView.setLayoutManager(llm);
@@ -80,12 +88,15 @@ public class SettingsFragment extends Fragment {
         Button btn_save = view.findViewById(R.id.btn_save);
         Switch aSwitch = view.findViewById(R.id.switch1);
 
+        // endregion
+
+        // region set theme
         theme = settings.getString("toggleTheme", null);
         if (theme.equals("0"))
             aSwitch.setChecked(false);
         else
             aSwitch.setChecked(true);
-
+        // endregion
 
         Handler handler = new Handler();
         final Runnable runnable = () -> {
@@ -111,6 +122,7 @@ public class SettingsFragment extends Fragment {
 
         String checkSessionUrl = String.format("%s/settings?sessionid=%s", domain, sessionid);
 
+        // region init requests
         try {
             settings(view, checkSessionUrl, 1);
             if (isOnline())
@@ -122,18 +134,24 @@ public class SettingsFragment extends Fragment {
         catch (Exception e) {
             settings(view, checkSessionUrl, 0);
         }
+        // endregion
 
         btn_save.setOnClickListener(view1 -> {
 
             String saveUrl = String.format("%s/change_settings?sessionid=%s&", domain, sessionid);
 
-            int n = PreferenceManager.getDefaultSharedPreferences(context).getInt("edtTextCounter", 0);
+            rv = view.findViewById(R.id.recycler_view);
 
-            for(int i = 0; i < n; i++){
-                String value = PreferenceManager.getDefaultSharedPreferences(view.getContext()).getString("edtText" + i, null);
-                saveUrl += value;
-                if (i != n - 1) saveUrl += "&";
+            for(int i = 0; i < rv.getChildCount(); i++ ) {
+                LinearLayout ly = (LinearLayout)rv.getChildAt(i);
+
+                String id = ((TextInputLayout) ly.getChildAt(2)).getEditText().getTag().toString();
+                String value = ((TextInputLayout) ly.getChildAt(2)).getEditText().getText().toString();
+                saveUrl += String.format("%s=%s", id, value);
+
+                if (i != rv.getChildCount() - 1) saveUrl += "&";
             }
+
             saveUrl += String.format("&csrfmiddlewaretoken=%s", settings.getString("token", null));
 
             dataSettings.clear();
@@ -217,6 +235,7 @@ public class SettingsFragment extends Fragment {
 
                     }
                 }
+
                 ca = new CustomAdapterSettingsFragment(getContext(), dataSettings);
                 recyclerView.setAdapter(ca);
 
@@ -240,14 +259,17 @@ public class SettingsFragment extends Fragment {
 
                             String jsonSettings = PreferenceManager.getDefaultSharedPreferences(view.getContext()).getString("settings", null);
 
+                            String localJson = "";
+                            String responseJson = "";
+
                             if (jsonSettings != null) {
 
                                 // get local json clone
-                                String localJson = jsonSettings;
+                                localJson = jsonSettings;
                                 JSONArray obj = new JSONObject(localJson).getJSONArray("settings");
 
                                 // get response json clone
-                                String responseJson = response.toString();
+                                responseJson = response.toString();
                                 JSONArray obj2 = new JSONObject(responseJson).getJSONArray("settings");
 
                                 // remove token from objects to compare
@@ -257,7 +279,10 @@ public class SettingsFragment extends Fragment {
                                 localJson = obj.toString();
                                 responseJson = obj2.toString();
 
-                                if (!localJson.equals(responseJson)) {
+
+                            }
+
+                                if (jsonSettings == null || !localJson.equals(responseJson)) {
 
                                     System.out.println("OPS");
 
@@ -319,7 +344,6 @@ public class SettingsFragment extends Fragment {
                                     snack.show();
 
                                 }
-                            }
 
 
                         } catch (JSONException e) {

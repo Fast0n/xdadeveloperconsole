@@ -1,23 +1,19 @@
 package com.fast0n.xdalabsconsole;
 
+import android.app.FragmentManager;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageButton;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
-import com.fast0n.xdalabsconsole.fragment.AppsFragment.AppsFragment;
 import com.fast0n.xdalabsconsole.fragment.DetailsFragment;
-import com.fast0n.xdalabsconsole.fragment.DetailsInterface;
-import com.fast0n.xdalabsconsole.fragment.ManagerFragment.ManageFragment;
 import com.fast0n.xdalabsconsole.fragment.ScreenshotFragment;
-import com.fast0n.xdalabsconsole.fragment.SettingsFragment.SettingsFragment;
-import com.fast0n.xdalabsconsole.fragment.XposedFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -32,12 +28,16 @@ public class EditActivity extends AppCompatActivity implements BottomNavigationV
     Unregistrar mUnregistrar;
     Bundle extras;
     FloatingActionButton save;
+    DetailsFragment myFragment;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         settings = getSharedPreferences("sharedPreferences", 0);
         editor = settings.edit();
+
+        myFragment = new DetailsFragment();
 
 
         String theme = settings.getString("toggleTheme", null);
@@ -59,10 +59,10 @@ public class EditActivity extends AppCompatActivity implements BottomNavigationV
 
         save.setOnClickListener(v -> {
 
-            Fragment fragment = new DetailsInterface();
-            setListener((DetailsInterface) fragment);
-            listener.changeApp(fragment.getView());
 
+            TextView textFragment = findViewById(R.id.edt_title);
+            System.out.println(textFragment.getText().toString());
+            textFragment.setText("FUNZIONAAAAAA");
 
         });
 
@@ -112,13 +112,6 @@ public class EditActivity extends AppCompatActivity implements BottomNavigationV
 
 
         return loadFragment(fragment);
-    }
-
-    private DetailsInterface listener ;
-
-    public void setListener(DetailsInterface listener)
-    {
-        this.listener = listener;
     }
 
 }
