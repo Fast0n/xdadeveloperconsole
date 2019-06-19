@@ -4,16 +4,19 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.fast0n.xdalabsconsole.fragment.DetailsFragment.DetailsFragment;
 import com.fast0n.xdalabsconsole.fragment.ScreenshotFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.textfield.TextInputLayout;
 
 import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent;
 import net.yslibrary.android.keyboardvisibilityevent.Unregistrar;
@@ -27,6 +30,8 @@ public class EditActivity extends AppCompatActivity implements BottomNavigationV
     Bundle extras;
     FloatingActionButton save;
     DetailsFragment myFragment;
+    String domain;
+    private RecyclerView rv;
 
 
     @Override
@@ -34,6 +39,8 @@ public class EditActivity extends AppCompatActivity implements BottomNavigationV
 
         settings = getSharedPreferences("sharedPreferences", 0);
         editor = settings.edit();
+
+        domain = "";
 
         myFragment = new DetailsFragment();
 
@@ -56,6 +63,15 @@ public class EditActivity extends AppCompatActivity implements BottomNavigationV
         updateKeyboardStatusText(KeyboardVisibilityEvent.isKeyboardVisible(this));
 
         save.setOnClickListener(v -> {
+
+
+            rv = findViewById(R.id.recycler_view);
+            // String saveUrl = String.format("%s/change_settings?sessionid=%s&", domain, sessionid);
+
+            for(int i = 0; i < rv.getChildCount(); i++ ) {
+                LinearLayout ly = (LinearLayout)rv.getChildAt(i);
+            }
+
 
 
             // TextView textFragment = findViewById(R.id.title);

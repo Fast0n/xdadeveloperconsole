@@ -49,6 +49,7 @@
         <item name="colorControlHighlight">@color/colorPrimary</item>
         <item name="android:textColorHint">@color/colorPrimary</item>
         <item name="android:textColor">@color/colorPrimary</item>
+        <item name="helperTextTextAppearance">@color/colorPrimary</item>
     </style>
 
 

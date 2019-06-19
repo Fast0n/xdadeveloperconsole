@@ -153,7 +153,6 @@ def dashboard(sessionid):
             "color": color
         })
 
-
     return result
 
 def settings(sessionid):

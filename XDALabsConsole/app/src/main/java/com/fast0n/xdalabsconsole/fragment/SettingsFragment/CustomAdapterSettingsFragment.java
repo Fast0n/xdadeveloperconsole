@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.fast0n.xdalabsconsole.R;
+import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.List;
 
@@ -30,7 +31,10 @@ public class CustomAdapterSettingsFragment extends RecyclerView.Adapter<CustomAd
         DataSettings c = infoList.get(position);
 
         holder.edtValue.setText(c.value);
-        holder.txtSecondTitle.setText(c.second_title);
+
+        holder.txtSecondTitle.setVisibility(View.GONE);
+        holder.edtHint.setHint(c.second_title);
+
         holder.txtTitle.setText(c.title);
         holder.txtAlert.setText(c.alert);
 
@@ -63,6 +67,7 @@ public class CustomAdapterSettingsFragment extends RecyclerView.Adapter<CustomAd
 
         TextView txtTitle, txtSecondTitle, txtAlert;
         EditText edtValue;
+        TextInputLayout edtHint;
 
         MyViewHolder(View view) {
             super(view);
@@ -71,6 +76,7 @@ public class CustomAdapterSettingsFragment extends RecyclerView.Adapter<CustomAd
             edtValue = view.findViewById(R.id.value);
             txtSecondTitle = view.findViewById(R.id.second_title);
             txtAlert = view.findViewById(R.id.title_developer2);
+            edtHint = view.findViewById(R.id.til_email);
 
         }
     }

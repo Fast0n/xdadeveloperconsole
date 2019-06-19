@@ -1,7 +1,10 @@
 package com.fast0n.xdalabsconsole.fragment.DetailsFragment;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
+import android.icu.lang.UCharacter;
 import android.text.InputFilter;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,10 +42,11 @@ public class CustomAdapterDetailsFragment extends RecyclerView.Adapter<CustomAda
 
         if (c.type.equals("input") || c.type.equals("textarea")){
             holder.swtValue.setVisibility(View.GONE);
-
-            holder.txtTitle.setText(c.title);
+            holder.txtTitle.setVisibility(View.GONE);
+            holder.edtValue.setHint(c.title);
 
             if (c.type.equals("input")){
+
                 holder.edtValue.getEditText().setSingleLine(true);
                 holder.edtValue.getEditText().setFilters(new InputFilter[] { new InputFilter.LengthFilter(30) });
             }
@@ -52,8 +56,12 @@ public class CustomAdapterDetailsFragment extends RecyclerView.Adapter<CustomAda
             else
                 holder.edtValue.getEditText().setText(c.value);
 
+            holder.edtValue.setHelperText(c.alert);
+
         }
         else if (c.type.equals("checkbox")){
+            holder.txtTitle.setText(c.title);
+
             holder.edtValue.setVisibility(View.GONE);
             holder.txtTitle.setText(c.title);
             if(c.value.equals("1"))
@@ -62,11 +70,20 @@ public class CustomAdapterDetailsFragment extends RecyclerView.Adapter<CustomAda
                 holder.swtValue.setChecked(false);
         }
 
+        /*
         if (c.alert != null) {
             holder.txtAlert.setText(c.alert);
         }
         else
             holder.txtAlert.setVisibility(View.GONE);
+        */
+
+        if (!c.id.equals("price")) {
+            holder.edtValue.getEditText().setCompoundDrawables(null, null, null, null);
+        }
+        else {
+            holder.edtValue.getEditText().setInputType(InputType.TYPE_CLASS_NUMBER);
+        }
 
         holder.edtValue.setTag(c.id);
     }
@@ -95,7 +112,6 @@ public class CustomAdapterDetailsFragment extends RecyclerView.Adapter<CustomAda
             txtTitle = view.findViewById(R.id.second_title);
             edtValue = view.findViewById(R.id.til_email);
             swtValue = view.findViewById(R.id.switch2);
-            txtAlert = view.findViewById(R.id.alert);
 
         }
     }

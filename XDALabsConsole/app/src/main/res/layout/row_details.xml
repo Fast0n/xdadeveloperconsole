@@ -7,6 +7,7 @@
     android:layout_height="wrap_content"
     android:layout_marginStart="8dp"
     android:layout_marginEnd="8dp"
+    android:layout_marginBottom="8dp"
     android:orientation="vertical"
     android:paddingTop="8dp"
     app2:layout_constraintEnd_toEndOf="parent"
@@ -44,19 +45,6 @@
         app2:layout_constraintEnd_toEndOf="parent"
         app2:layout_constraintStart_toStartOf="parent">
 
-        <TextView
-            android:id="@+id/alert"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:layout_weight="1"
-            android:paddingLeft="4dp"
-            android:textColor="?attr/color_text"
-            android:textSize="15sp"
-            app2:layout_constraintEnd_toEndOf="parent"
-            app2:layout_constraintStart_toStartOf="parent"
-            app2:layout_constraintTop_toBottomOf="@+id/textInputLayout" />
-
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/value"
             android:layout_width="fill_parent"
@@ -68,7 +56,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/edt_id"
-            />
+            android:drawableLeft="@drawable/ic_valute"/>
 
     </com.google.android.material.textfield.TextInputLayout>
 
