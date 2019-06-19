@@ -288,7 +288,6 @@ def get_app(sessionid, id):
         label = element.find("label").get_text().split('\n')[0]
         key = label.lower()
         add = {}
-        add["title"] = label
 
         # create var to check
         text = element.find("input", {"type": "text"})
@@ -296,39 +295,54 @@ def get_app(sessionid, id):
         checkbox = element.find("input", {"type": "checkbox"})
         select = element.find("select")
         a = element.find("a")
+        alert = element.find("span", {"class": ["badge", "badge-amc"]})
 
         # checking
         if text:
+            add["title"] = label
             add["value"] = text.get("value")
             add["id"] = text.get("name")
             add["type"] = text.name
+            if alert:
+                add["alert"] = alert.get_text().strip()
         elif textarea:
-            add["value"] = textarea.get_text()
+            add["title"] = label
+            add["value"] = textarea.get_text().strip()
             add["id"] = textarea.get("name")
             add["type"] = textarea.name
+            if alert:
+                add["alert"] = alert.get_text().strip()
         elif checkbox:
+            add["title"] = label
             if checkbox.get("checked") == "checked":
-                add["value"] = True
+                add["value"] = "1"
             else:
-                add["value"] = False
+                add["value"] = "0"
             add["type"] = checkbox.get("type")
             add["id"] = checkbox.get("name")
+            if alert:
+                add["alert"] = alert.get_text().strip()
         elif select:
-            options = select.find_all("option")
-            add["options"] = []
-            for option in options:
-                if option.get("selected") == "selected":
-                    add["value"] = option.get_text()
-                else:
-                    add["options"].append(option.get_text())
-            add["id"] = select.get("name")
-            add["type"] = select.name
+            pass
+            # options = select.find_all("option")
+            # add["options"] = []
+            # for option in options:
+            #     if option.get("selected") == "selected":
+            #         add["value"] = option.get_text()
+            #     else:
+            #         add["options"].append(option.get_text())
+            # add["id"] = select.get("name")
+            # add["type"] = select.name
         elif a:
-            add["id"] = a.get("name")
-            add["value"] = a.get("href")
-            add["type"] = a.name
+            pass
+            # add["id"] = a.get("name")
+            # add["value"] = a.get("href")
+            # add["type"] = a.name
 
-        result["app"].append(add)
+
+
+        if add:
+            result["app"].append(add)
 
     return result
 

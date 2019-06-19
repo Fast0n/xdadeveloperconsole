@@ -107,6 +107,7 @@ public class SettingsFragment extends Fragment {
 
         };
 
+
         aSwitch.setOnCheckedChangeListener((compoundButton, b) -> {
             if (b) {
                 editor.putString("toggleTheme", "1");
@@ -123,17 +124,9 @@ public class SettingsFragment extends Fragment {
         String checkSessionUrl = String.format("%s/settings?sessionid=%s", domain, sessionid);
 
         // region init requests
-        try {
-            settings(view, checkSessionUrl, 1);
-            if (isOnline())
-                handler.postDelayed(() -> {
-                    dataSettings.clear();
-                    settings(view, checkSessionUrl, 0);
-                }, 1000);
-        }
-        catch (Exception e) {
+        settings(view, checkSessionUrl, 1);
+        if (isOnline())
             settings(view, checkSessionUrl, 0);
-        }
         // endregion
 
         btn_save.setOnClickListener(view1 -> {
@@ -194,50 +187,51 @@ public class SettingsFragment extends Fragment {
 
                 String jsonSettings = PreferenceManager.getDefaultSharedPreferences(view.getContext()).getString("settings", null);
 
-                JSONObject response = new JSONObject(jsonSettings);
+                if (jsonSettings != null) {
 
-                JSONArray array = response.getJSONArray("settings");
+                    JSONObject response = new JSONObject(jsonSettings);
 
-                int n = array.length();
+                    JSONArray array = response.getJSONArray("settings");
 
-                // set recycle view
-                String title = null;
-                String alert = null;
-                String id = null;
+                    int n = array.length();
 
-                // set recycle view
-                for (int j = 0; j < n; j++) {
-                    JSONObject element= array.getJSONObject(j);
+                    // set recycle view
+                    String title = null;
+                    String alert = null;
+                    String id = null;
 
-                    String name = element.getString("name");
-                    String value = element.getString("value");
-                    if (name.equals("csrfmiddlewaretoken")){
-                        editor.putString("token", value);
-                        editor.apply();
+                    // set recycle view
+                    for (int j = 0; j < n; j++) {
+                        JSONObject element = array.getJSONObject(j);
+
+                        String name = element.getString("name");
+                        String value = element.getString("value");
+                        if (name.equals("csrfmiddlewaretoken")) {
+                            editor.putString("token", value);
+                            editor.apply();
+                        } else {
+
+                            if (element.has("alert")) {
+                                alert = element.getString("alert");
+                            }
+                            if (element.has("id_name")) {
+                                id = element.getString("id_name");
+                            }
+                            if (element.getString("tag").equals("h2")) {
+                                title = element.getString("value");
+                            } else {
+                                dataSettings.add(new DataSettings(id, title, name, value, alert));
+                                title = null;
+                                alert = null;
+                                id = null;
+                            }
+
+                        }
                     }
-                    else{
 
-                        if (element.has("alert")){
-                            alert = element.getString("alert");
-                        }
-                        if (element.has("id_name")){
-                            id = element.getString("id_name");
-                        }
-                        if (element.getString("tag").equals("h2")){
-                            title = element.getString("value");
-                        }
-                        else{
-                            dataSettings.add(new DataSettings(id, title, name, value, alert));
-                            title = null;
-                            alert = null;
-                            id = null;
-                        }
-
-                    }
+                    ca = new CustomAdapterSettingsFragment(getContext(), dataSettings);
+                    recyclerView.setAdapter(ca);
                 }
-
-                ca = new CustomAdapterSettingsFragment(getContext(), dataSettings);
-                recyclerView.setAdapter(ca);
 
 
             } catch (JSONException e) {
@@ -282,68 +276,65 @@ public class SettingsFragment extends Fragment {
 
                             }
 
-                                if (jsonSettings == null || !localJson.equals(responseJson)) {
+                            if (jsonSettings == null || !localJson.equals(responseJson)) {
 
-                                    System.out.println("OPS");
+                                dataSettings.clear();
 
-                                    PreferenceManager.getDefaultSharedPreferences(view.getContext()).edit()
-                                            .remove("settings").apply();
+                                PreferenceManager.getDefaultSharedPreferences(view.getContext()).edit()
+                                        .remove("settings").apply();
 
 
-                                    PreferenceManager.getDefaultSharedPreferences(view.getContext()).edit()
-                                            .putString("settings", response.toString()).apply();
+                                PreferenceManager.getDefaultSharedPreferences(view.getContext()).edit()
+                                        .putString("settings", response.toString()).apply();
 
-                                    JSONArray array = response.getJSONArray("settings");
+                                JSONArray array = response.getJSONArray("settings");
 
-                                    int n = array.length();
+                                int n = array.length();
 
-                                    // set recycle view
-                                    String title = null;
-                                    String alert = null;
-                                    String id = null;
+                                // set recycle view
+                                String title = null;
+                                String alert = null;
+                                String id = null;
 
-                                    for (int j = 0; j < n; j++) {
-                                        JSONObject element= array.getJSONObject(j);
+                                for (int j = 0; j < n; j++) {
+                                    JSONObject element = array.getJSONObject(j);
 
-                                        String name = element.getString("name");
-                                        String value = element.getString("value");
-                                        if (name.equals("csrfmiddlewaretoken")){
-                                            editor.putString("token", value);
-                                            editor.apply();
+                                    String name = element.getString("name");
+                                    String value = element.getString("value");
+                                    if (name.equals("csrfmiddlewaretoken")){
+                                        editor.putString("token", value);
+                                        editor.apply();
+                                    }
+                                    else{
+
+                                        if (element.has("alert")){
+                                            alert = element.getString("alert");
+                                        }
+                                        if (element.has("id_name")){
+                                            id = element.getString("id_name");
+                                        }
+                                        if (element.getString("tag").equals("h2")){
+                                            title = element.getString("value");
                                         }
                                         else{
-
-                                            if (element.has("alert")){
-                                                alert = element.getString("alert");
-                                            }
-                                            if (element.has("id_name")){
-                                                id = element.getString("id_name");
-                                            }
-                                            if (element.getString("tag").equals("h2")){
-                                                title = element.getString("value");
-                                            }
-                                            else{
-                                                dataSettings.add(new DataSettings(id, title, name, value, alert));
-                                                title = null;
-                                                alert = null;
-                                                id = null;
-                                            }
-
+                                            dataSettings.add(new DataSettings(id, title, name, value, alert));
+                                            title = null;
+                                            alert = null;
+                                            id = null;
                                         }
+
                                     }
-
-                                    PreferenceManager.getDefaultSharedPreferences(context).edit()
-                                            .remove("edtTextCounter").apply();
-
-                                    ca = new CustomAdapterSettingsFragment(context, dataSettings);
-                                    recyclerView.setAdapter(ca);
-
-                                    // show success message
-                                    snack = Snackbar.make(view, getString(R.string.alert1), Snackbar.LENGTH_LONG);
-                                    SnackbarHelper.configSnackbar(view.getContext(), snack);
-                                    snack.show();
-
                                 }
+
+                                ca = new CustomAdapterSettingsFragment(context, dataSettings);
+                                recyclerView.setAdapter(ca);
+
+                                // show success message
+                                snack = Snackbar.make(view, getString(R.string.alert1), Snackbar.LENGTH_LONG);
+                                SnackbarHelper.configSnackbar(view.getContext(), snack);
+                                snack.show();
+
+                            }
 
 
                         } catch (JSONException e) {

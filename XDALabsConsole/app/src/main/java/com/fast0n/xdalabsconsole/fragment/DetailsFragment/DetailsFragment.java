@@ -1,4 +1,4 @@
-package com.fast0n.xdalabsconsole.fragment;
+package com.fast0n.xdalabsconsole.fragment.DetailsFragment;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -6,31 +6,39 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
-import android.widget.Switch;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.fast0n.xdalabsconsole.R;
+import com.fast0n.xdalabsconsole.fragment.SettingsFragment.CustomAdapterSettingsFragment;
+import com.fast0n.xdalabsconsole.fragment.SettingsFragment.DataSettings;
 import com.fast0n.xdalabsconsole.java.SnackbarHelper;
 import com.google.android.material.snackbar.Snackbar;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class DetailsFragment extends Fragment {
 
     private Snackbar snack;
     private Context context;
 
-    private EditText edt1, edt2, edt3;
-    private Switch swc;
+    final List<DataDetails> dataDetails = new ArrayList<>();
+    RecyclerView recyclerView;
+    CustomAdapterDetailsFragment ca;
+    private LinearLayoutManager llm;
 
     private String domain;
 
@@ -46,14 +54,17 @@ public class DetailsFragment extends Fragment {
 
         context = getActivity().getApplicationContext();
 
+        recyclerView = view.findViewById(R.id.recycler_view);
+
+        // initial recycle view
+        recyclerView.setHasFixedSize(true);
+        llm = new LinearLayoutManager(context);
+        llm.setOrientation(RecyclerView.VERTICAL);
+        recyclerView.setNestedScrollingEnabled(false);
+        recyclerView.setLayoutManager(llm);
+
         settings = context.getSharedPreferences("sharedPreferences", 0);
         editor = settings.edit();
-
-        // declare objects
-        edt1 = view.findViewById(R.id.edt_title);
-        edt2 = view.findViewById(R.id.edt_desc);
-        edt3 = view.findViewById(R.id.edt_price);
-        swc = view.findViewById(R.id.switch1);
 
         String id = getArguments().getString("idApp");
 
@@ -73,29 +84,28 @@ public class DetailsFragment extends Fragment {
 
                         try {
 
-                            /*
+
 
                             JSONArray array = response.getJSONArray("app");
 
                             int n = array.length();
 
                             for (int i = 0; i < n; i++){
-                                JSONObject element = array.getJSONObject(0);
+                                JSONObject element = array.getJSONObject(i);
+                                String id = element.getString("id");
+                                String title = element.getString("title");
                                 String type = element.getString("type");
+                                String value = element.getString("value");
+                                String alert = null;
+                                if (element.has("alert")){
+                                    alert = element.getString("alert");
+                                }
+
+                                dataDetails.add(new DataDetails(id, title, type, value, alert));
                             }
 
-                            */
-
-                            JSONArray array = response.getJSONArray("app");
-                            String str1 = array.getJSONObject(0).getString("value");
-                            String str2 = array.getJSONObject(1).getString("value");
-                            String str3 = array.getJSONObject(2).getString("value");
-                            boolean ckd1 = array.getJSONObject(3).getBoolean("value");
-
-                            edt1.setText(str1);
-                            edt2.setText(str2);
-                            edt3.setText(str3);
-                            swc.setChecked(ckd1);
+                            ca = new CustomAdapterDetailsFragment(getContext(), dataDetails);
+                            recyclerView.setAdapter(ca);
 
                             // show success message
                             snack = Snackbar.make(view, getString(R.string.alert1), Snackbar.LENGTH_LONG);
@@ -124,12 +134,6 @@ public class DetailsFragment extends Fragment {
 
 
     }
-
-    public void changeApp(View view){
-        edt1 = view.findViewById(R.id.edt_title);
-        System.out.println("SUCA");
-    }
-
 
 }
 

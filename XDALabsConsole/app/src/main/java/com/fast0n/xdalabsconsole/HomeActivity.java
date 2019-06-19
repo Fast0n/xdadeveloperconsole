@@ -48,7 +48,6 @@ public class HomeActivity extends AppCompatActivity implements BottomNavigationV
 
         ImageButton imageButton = findViewById(R.id.imageButton);
 
-
         mUnregistrar = KeyboardVisibilityEvent.registerEventListener(this, this::updateKeyboardStatusText);
         updateKeyboardStatusText(KeyboardVisibilityEvent.isKeyboardVisible(this));
 

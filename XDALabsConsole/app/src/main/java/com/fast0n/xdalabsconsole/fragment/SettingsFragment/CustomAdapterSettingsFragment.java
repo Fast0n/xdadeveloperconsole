@@ -4,7 +4,6 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -15,24 +14,20 @@ import com.fast0n.xdalabsconsole.R;
 
 import java.util.List;
 
-import static android.widget.AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL;
-
 
 public class CustomAdapterSettingsFragment extends RecyclerView.Adapter<CustomAdapterSettingsFragment.MyViewHolder> {
 
     private final List<DataSettings> infoList;
-    private Context context;
+    private final Context context;
 
     CustomAdapterSettingsFragment(Context context, List<DataSettings> infoList) {
         this.context = context;
         this.infoList = infoList;
-
     }
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         DataSettings c = infoList.get(position);
-
 
         holder.edtValue.setText(c.value);
         holder.txtSecondTitle.setText(c.second_title);

@@ -1,6 +1,5 @@
 package com.fast0n.xdalabsconsole;
 
-import android.app.FragmentManager;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -10,9 +9,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 
-import com.fast0n.xdalabsconsole.fragment.DetailsFragment;
+import com.fast0n.xdalabsconsole.fragment.DetailsFragment.DetailsFragment;
 import com.fast0n.xdalabsconsole.fragment.ScreenshotFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -60,9 +58,9 @@ public class EditActivity extends AppCompatActivity implements BottomNavigationV
         save.setOnClickListener(v -> {
 
 
-            TextView textFragment = findViewById(R.id.edt_title);
-            System.out.println(textFragment.getText().toString());
-            textFragment.setText("FUNZIONAAAAAA");
+            // TextView textFragment = findViewById(R.id.title);
+            // System.out.println(textFragment.getText().toString());
+            // textFragment.setText("FUNZIONAAAAAA");
 
         });
 
