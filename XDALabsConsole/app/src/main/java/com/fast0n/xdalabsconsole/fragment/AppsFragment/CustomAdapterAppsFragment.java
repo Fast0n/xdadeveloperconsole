@@ -43,7 +43,7 @@ public class CustomAdapterAppsFragment extends RecyclerView.Adapter<CustomAdapte
         holder.cardView.setCardBackgroundColor(Color.parseColor(holder.txtColor.getText().toString()));
 
         holder.cardView.setOnClickListener(view1 ->
-                context.startActivity(new Intent(context, EditActivity.class).putExtra("idApp", c.id )));
+                context.startActivity(new Intent(context, EditActivity.class).putExtra("idApp", c.id ).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)));
 
     }
 

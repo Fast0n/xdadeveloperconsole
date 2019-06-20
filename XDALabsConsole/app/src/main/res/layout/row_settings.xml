@@ -19,9 +19,8 @@
         android:id="@+id/title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
         android:fontFamily="sans-serif-light"
-        android:text="Settings"
         android:textAllCaps="true"
         android:textColor="?attr/color_text"
         android:textSize="30sp"
@@ -29,20 +28,6 @@
         app2:layout_constraintHorizontal_bias="0.0"
         app2:layout_constraintStart_toStartOf="parent"
         app2:layout_constraintTop_toBottomOf="@+id/desc_info" />
-
-    <TextView
-        android:id="@+id/second_title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginTop="8dp"
-        android:text="title"
-        android:textColor="?attr/color_text"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        app2:layout_constraintEnd_toEndOf="parent"
-        app2:layout_constraintStart_toStartOf="parent"
-        app2:layout_constraintTop_toBottomOf="@+id/textInputLayout" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/til_email"
@@ -64,28 +49,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/edt_id" />
-
-        <TextView
-            android:id="@+id/title_developer2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="0dp"
-            android:layout_marginEnd="0dp"
-            android:layout_marginBottom="8dp"
-            android:layout_weight="1"
-            android:background="?attr/colorPrimary"
-            android:fontFamily="sans-serif-light"
-            android:paddingStart="4dp"
-            android:paddingLeft="4dp"
-            android:paddingTop="4dp"
-            android:paddingEnd="4dp"
-            android:paddingRight="4dp"
-            android:paddingBottom="4dp"
-            android:text=""
-            android:textColor="?attr/color_object"
-            app2:layout_constraintBottom_toBottomOf="parent"
-            app2:layout_constraintEnd_toEndOf="parent"
-            app2:layout_constraintStart_toStartOf="parent" />
 
     </com.google.android.material.textfield.TextInputLayout>
 

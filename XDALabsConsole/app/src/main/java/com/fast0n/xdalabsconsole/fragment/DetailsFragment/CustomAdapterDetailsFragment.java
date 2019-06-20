@@ -1,14 +1,17 @@
 package com.fast0n.xdalabsconsole.fragment.DetailsFragment;
 
+import android.app.Activity;
 import android.content.Context;
-import android.content.res.ColorStateList;
-import android.icu.lang.UCharacter;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
+import android.text.Editable;
 import android.text.InputFilter;
 import android.text.InputType;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -17,22 +20,27 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.fast0n.xdalabsconsole.R;
-import com.fast0n.xdalabsconsole.fragment.SettingsFragment.DataSettings;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputLayout;
 
-import java.util.List;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
-import static android.widget.AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL;
+import java.util.List;
 
 
 public class CustomAdapterDetailsFragment extends RecyclerView.Adapter<CustomAdapterDetailsFragment.MyViewHolder> {
 
     private final List<DataDetails> infoList;
     private Context context;
+    private FloatingActionButton fab;
+    private String chache;
 
     CustomAdapterDetailsFragment(Context context, List<DataDetails> infoList) {
         this.context = context;
         this.infoList = infoList;
+        fab = ((Activity) context).findViewById(R.id.fab);
+        chache = PreferenceManager.getDefaultSharedPreferences(context).getString("details", null);
 
     }
 
@@ -41,51 +49,145 @@ public class CustomAdapterDetailsFragment extends RecyclerView.Adapter<CustomAda
         DataDetails c = infoList.get(position);
 
         if (c.type.equals("input") || c.type.equals("textarea")){
+
+            EditText edtValue = holder.tilValue.getEditText(); // get EditText from TextInputLayout
+            assert edtValue != null;
+
+            // region gone elements
             holder.swtValue.setVisibility(View.GONE);
-            holder.txtTitle.setVisibility(View.GONE);
-            holder.edtValue.setHint(c.title);
+            // endregion
 
+            // region input EditText
             if (c.type.equals("input")){
-
-                holder.edtValue.getEditText().setSingleLine(true);
-                holder.edtValue.getEditText().setFilters(new InputFilter[] { new InputFilter.LengthFilter(30) });
+                edtValue.setSingleLine(true); // set single line true
+                edtValue.setFilters(new InputFilter[] { new InputFilter.LengthFilter(30) }); // set 30 char to max length
             }
+            // endregion
 
+            // region EditText value
             if (c.value.equals("null"))
-                holder.edtValue.getEditText().setText("");
+                edtValue.setText("");
             else
-                holder.edtValue.getEditText().setText(c.value);
+                edtValue.setText(c.value);
+            // endregion
 
-            holder.edtValue.setHelperText(c.alert);
+            // region price editText
+            if (!c.id.equals("price")) {
+                edtValue.setCompoundDrawables(null, null, null, null); // delete drawables from EditText
+            }
+            else {
+                edtValue.setInputType(InputType.TYPE_CLASS_NUMBER);
+            }
+            // endregion
+
+            // region on text change
+            edtValue.addTextChangedListener(new TextWatcher() {
+
+                // the user's changes are saved here
+                public void onTextChanged(CharSequence c, int start, int before, int count) {
+
+                    // region cache manager
+                    String jsonDetailsChanged = PreferenceManager.getDefaultSharedPreferences(context).getString("detailsChanged", null);
+                    try {
+                        // parsing and update JSON
+                        JSONObject obj = new JSONObject(chache);
+                        JSONArray array = obj.getJSONArray("app");
+                        JSONObject element = array.getJSONObject(position);
+                        element.put("value", edtValue.getText().toString());
+                        // save JSON
+                        jsonDetailsChanged = obj.toString();
+                        PreferenceManager.getDefaultSharedPreferences(context).edit().putString("detailsChanged", jsonDetailsChanged).commit();
+
+
+                        // try
+                        String prova = PreferenceManager.getDefaultSharedPreferences(context).getString("detailsChanged", null);
+                        System.out.println(prova);
+
+
+                    }catch (Exception ignored){}
+                    // endregion
+
+                    FloatingActionButton fab = ((Activity) context).findViewById(R.id.fab);
+                    if (!chache.equals(jsonDetailsChanged)) {
+                        fab.show();
+                        ((Activity) context).findViewById(R.id.fab).setVisibility(View.VISIBLE);
+                    }
+                    else
+                        fab.hide();
+                }
+
+                public void beforeTextChanged(CharSequence c, int start, int count, int after) {}
+
+                public void afterTextChanged(Editable c) {}
+            });
+
+            // endregion
+
+            holder.tilValue.setHint(c.title); // set TextInputLayout hint
+            holder.tilValue.setHelperText(c.alert); // set TextInputLayout helper text
+            holder.tilValue.setTag(c.id); // set TextInputLayout tag
 
         }
         else if (c.type.equals("checkbox")){
-            holder.txtTitle.setText(c.title);
 
-            holder.edtValue.setVisibility(View.GONE);
-            holder.txtTitle.setText(c.title);
-            if(c.value.equals("1"))
+            // region gone elements
+            holder.tilValue.setVisibility(View.GONE);
+            // endregion
+
+            // region Switch value
+            boolean cacheValue;
+            if(c.value.equals("1")){
                 holder.swtValue.setChecked(true);
-            else
+                cacheValue = true;
+            }
+            else {
                 holder.swtValue.setChecked(false);
-        }
+                cacheValue = false;
+            }
+            // endregion
 
-        /*
-        if (c.alert != null) {
-            holder.txtAlert.setText(c.alert);
-        }
-        else
-            holder.txtAlert.setVisibility(View.GONE);
-        */
+            holder.swtValue.setOnCheckedChangeListener((buttonView, isChecked) -> {
 
-        if (!c.id.equals("price")) {
-            holder.edtValue.getEditText().setCompoundDrawables(null, null, null, null);
-        }
-        else {
-            holder.edtValue.getEditText().setInputType(InputType.TYPE_CLASS_NUMBER);
-        }
+                String jsonDetailsChanged = PreferenceManager.getDefaultSharedPreferences(context).getString("detailsChanged", null);
 
-        holder.edtValue.setTag(c.id);
+                // region cache manager
+                String value = null;
+
+                if(holder.swtValue.isChecked()){
+                    value = "1";
+                }
+                else {
+                    value = "1";
+                }
+
+                try {
+                    JSONObject obj = new JSONObject(chache);
+                    JSONArray array = obj.getJSONArray("app");
+                    JSONObject element = array.getJSONObject(position);
+                    element.put("value", value);
+                    jsonDetailsChanged = obj.toString();
+
+                    // save JSON string
+                    SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
+                    SharedPreferences.Editor editor = settings.edit();
+                    editor.putString("detailsChanged", jsonDetailsChanged);
+                    editor.apply();
+
+                } catch (Exception ignored){}
+
+                // endregion
+
+                if (cacheValue != holder.swtValue.isChecked()) {
+                    fab.show();
+                    ((Activity) context).findViewById(R.id.fab).setVisibility(View.VISIBLE);
+                }
+                else
+                    fab.hide();
+            });
+
+            holder.swtValue.setHint(c.title);
+            holder.swtValue.setTag(c.id); // set tag to Switch
+        }
     }
 
     @Override
@@ -102,19 +204,18 @@ public class CustomAdapterDetailsFragment extends RecyclerView.Adapter<CustomAda
 
     class MyViewHolder extends RecyclerView.ViewHolder {
 
-        TextView txtTitle, txtAlert;
         Switch swtValue;
-        TextInputLayout edtValue;
+        TextInputLayout tilValue;
 
         MyViewHolder(View view) {
             super(view);
             // addressed
-            txtTitle = view.findViewById(R.id.second_title);
-            edtValue = view.findViewById(R.id.til_email);
+            tilValue = view.findViewById(R.id.til_email);
             swtValue = view.findViewById(R.id.switch2);
 
         }
     }
+
 }
 
 

@@ -83,7 +83,6 @@ public class SettingsFragment extends Fragment {
         String sessionid = settings.getString("sessionid", null);
 
         info = view.findViewById(R.id.info);
-        title_developer2 = view.findViewById(R.id.title_developer2);
 
         Button btn_save = view.findViewById(R.id.btn_save);
         Switch aSwitch = view.findViewById(R.id.switch1);
@@ -138,8 +137,8 @@ public class SettingsFragment extends Fragment {
             for(int i = 0; i < rv.getChildCount(); i++ ) {
                 LinearLayout ly = (LinearLayout)rv.getChildAt(i);
 
-                String id = ((TextInputLayout) ly.getChildAt(2)).getEditText().getTag().toString();
-                String value = ((TextInputLayout) ly.getChildAt(2)).getEditText().getText().toString();
+                String id = ((TextInputLayout) ly.getChildAt(1)).getEditText().getTag().toString();
+                String value = ((TextInputLayout) ly.getChildAt(1)).getEditText().getText().toString();
                 saveUrl += String.format("%s=%s", id, value);
 
                 if (i != rv.getChildCount() - 1) saveUrl += "&";
@@ -147,7 +146,6 @@ public class SettingsFragment extends Fragment {
 
             saveUrl += String.format("&csrfmiddlewaretoken=%s", settings.getString("token", null));
 
-            dataSettings.clear();
             settings(view, saveUrl, 0);
         });
 

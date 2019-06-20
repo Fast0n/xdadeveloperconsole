@@ -23,22 +23,22 @@ import net.yslibrary.android.keyboardvisibilityevent.Unregistrar;
 public class HomeActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
 
     SharedPreferences settings;
-    SharedPreferences.Editor editor;
     BottomNavigationView navView;
     Unregistrar mUnregistrar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
+        // region set theme
         settings = getSharedPreferences("sharedPreferences", 0);
-        editor = settings.edit();
-
         String theme = settings.getString("toggleTheme", null);
 
+        assert theme != null;
         if (theme.equals("0"))
             setTheme(R.style.AppTheme);
         else
             setTheme(R.style.DarkTheme);
+        // endregion
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
@@ -63,7 +63,7 @@ public class HomeActivity extends AppCompatActivity implements BottomNavigationV
     }
 
     /**
-     * Nascondi layout se la tastierà è aperta
+     * hide keyboard if open
      */
     private void updateKeyboardStatusText(boolean isOpen) {
 
@@ -83,7 +83,6 @@ public class HomeActivity extends AppCompatActivity implements BottomNavigationV
         return false;
     }
 
-
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
@@ -98,14 +97,12 @@ public class HomeActivity extends AppCompatActivity implements BottomNavigationV
                 break;
             case R.id.navigation_xposed:
                 fragment = new XposedFragment();
-                // startActivity(new Intent(this, EditActivity.class).putExtra("idApp", "5d826e0d-2b11-403c-9865-e28dc8092bb1" ));
                 break;
         }
 
 
         return loadFragment(fragment);
     }
-
 
     public void onBackPressed() {
         finishAffinity();

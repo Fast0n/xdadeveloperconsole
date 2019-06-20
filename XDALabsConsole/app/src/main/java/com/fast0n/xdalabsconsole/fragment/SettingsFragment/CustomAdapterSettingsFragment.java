@@ -32,11 +32,9 @@ public class CustomAdapterSettingsFragment extends RecyclerView.Adapter<CustomAd
 
         holder.edtValue.setText(c.value);
 
-        holder.txtSecondTitle.setVisibility(View.GONE);
         holder.edtHint.setHint(c.second_title);
 
         holder.txtTitle.setText(c.title);
-        holder.txtAlert.setText(c.alert);
 
         if (c.title != null)
             holder.txtTitle.setVisibility(View.VISIBLE);
@@ -44,9 +42,7 @@ public class CustomAdapterSettingsFragment extends RecyclerView.Adapter<CustomAd
             holder.txtTitle.setVisibility(View.GONE);
 
         if (c.alert != null)
-            holder.txtAlert.setVisibility(View.VISIBLE);
-        else
-            holder.txtAlert.setVisibility(View.GONE);
+            holder.edtHint.setHelperText(c.alert);
 
         holder.edtValue.setTag(c.idName);
     }
@@ -65,7 +61,7 @@ public class CustomAdapterSettingsFragment extends RecyclerView.Adapter<CustomAd
 
     class MyViewHolder extends RecyclerView.ViewHolder {
 
-        TextView txtTitle, txtSecondTitle, txtAlert;
+        TextView txtTitle, txtAlert;
         EditText edtValue;
         TextInputLayout edtHint;
 
@@ -74,8 +70,6 @@ public class CustomAdapterSettingsFragment extends RecyclerView.Adapter<CustomAd
             // addressed
             txtTitle = view.findViewById(R.id.title);
             edtValue = view.findViewById(R.id.value);
-            txtSecondTitle = view.findViewById(R.id.second_title);
-            txtAlert = view.findViewById(R.id.title_developer2);
             edtHint = view.findViewById(R.id.til_email);
 
         }

@@ -51,14 +51,16 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         View view = findViewById(android.R.id.content);
 
+        domain = getResources().getString(R.string.url); // get server domain
+
+        // region init SharedPreferences
         settings = getSharedPreferences("sharedPreferences", 0);
         editor = settings.edit();
-        domain = getResources().getString(R.string.url);
+        // endregion
 
-        // get theme
+        // region set theme
         String theme = settings.getString("toggleTheme", null);
 
-        // check theme
         if (theme == null) {
             editor.putString("toggleTheme", "1");
             editor.apply();
@@ -67,60 +69,69 @@ public class LoginActivity extends AppCompatActivity {
             setTheme(R.style.AppTheme);
         else
             setTheme(R.style.DarkTheme);
+        // endregion
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        // declare objects
+        // region declare objects
         rotateLoading = findViewById(R.id.rotateloading);
         loginCard = findViewById(R.id.cardView);
         forgotPassword = findViewById(R.id.textView2);
         edt_username = findViewById(R.id.edt_id);
         edt_password = findViewById(R.id.edt_password);
         btn_login = findViewById(R.id.btn_login);
-
-        // check session id
-        String sessionId = settings.getString("sessionid", null);
+        // endregion
+        
+        String sessionId = settings.getString("sessionid", null); // get sessionid
 
         if (sessionId != null) {
-            // get invisible element for animation
+
+            // region start animation
             loginCard.setVisibility(View.INVISIBLE);
             forgotPassword.setVisibility(View.INVISIBLE);
             btn_login.setVisibility(View.INVISIBLE);
 
-            // start animation
             rotateLoading.start();
+            // endregion
 
-            String url = String.format("%s/check?sessionid=%s", domain, sessionId);
+            String url = String.format("%s/check?sessionid=%s", domain, sessionId); // generate request url
+
             checkSessionId(view, url);
         }
 
         btn_login.setOnClickListener(v -> {
 
+            // region get editText value
             String username = edt_username.getText().toString();
             String password = edt_password.getText().toString();
+            // endregion
 
-            if (!username.isEmpty() && !password.isEmpty() && !btn_login.getText().toString().equals(getString(R.string.retry))) {
-
-                // get invisible element for animation
-                loginCard.setVisibility(View.INVISIBLE);
-                forgotPassword.setVisibility(View.INVISIBLE);
-                btn_login.setVisibility(View.INVISIBLE);
+            if (!username.isEmpty() && !password.isEmpty()) {
 
                 InputMethodManager imm = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
                 assert imm != null;
                 imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
 
-                // start animation
+                // region start animation
+                loginCard.setVisibility(View.INVISIBLE);
+                forgotPassword.setVisibility(View.INVISIBLE);
+                btn_login.setVisibility(View.INVISIBLE);
+
                 rotateLoading.start();
+                // endregion
 
                 getKey(v, username, password);
+
             } else {
 
                 String message = getString(R.string.alert);
+
+                // region error message
                 Snackbar snack = Snackbar.make(v, message, Snackbar.LENGTH_LONG);
                 SnackbarHelper.configSnackbar(v.getContext(), snack);
                 snack.show();
+                // endregion
             }
 
         });

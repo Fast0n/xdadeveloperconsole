@@ -125,7 +125,8 @@ public class ManageFragment extends Fragment {
                 SnackbarHelper.configSnackbar(view.getContext(), snack);
                 snack.show();
             }
-        } else {
+        }
+        else {
             RequestQueue queue = Volley.newRequestQueue(context);
             queue.getCache().clear();
             JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, url, null,

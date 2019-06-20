@@ -1,11 +1,13 @@
 package com.fast0n.xdalabsconsole;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
-import android.widget.TextView;
+import android.widget.Switch;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -17,40 +19,42 @@ import com.fast0n.xdalabsconsole.fragment.ScreenshotFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputLayout;
+import com.victor.loading.rotate.RotateLoading;
 
 import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent;
 import net.yslibrary.android.keyboardvisibilityevent.Unregistrar;
 
+import java.util.Objects;
+
+import static android.view.View.GONE;
+
 public class EditActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
 
     SharedPreferences settings;
-    SharedPreferences.Editor editor;
-    BottomNavigationView navView;
-    Unregistrar mUnregistrar;
-    Bundle extras;
-    FloatingActionButton save;
-    DetailsFragment myFragment;
     String domain;
-    private RecyclerView rv;
+    Bundle extras;
+    Unregistrar mUnregistrar;
 
+    BottomNavigationView navView;
+    FloatingActionButton save;
+    RecyclerView rv;
+    RotateLoading rotateloading;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
+        domain = getResources().getString(R.string.url); // get server domain
+
+        // region set theme
         settings = getSharedPreferences("sharedPreferences", 0);
-        editor = settings.edit();
-
-        domain = "";
-
-        myFragment = new DetailsFragment();
-
-
         String theme = settings.getString("toggleTheme", null);
 
+        assert theme != null;
         if (theme.equals("0"))
             setTheme(R.style.AppTheme);
         else
             setTheme(R.style.DarkTheme);
+        // endregion
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit);
@@ -64,33 +68,44 @@ public class EditActivity extends AppCompatActivity implements BottomNavigationV
 
         save.setOnClickListener(v -> {
 
-
+            // region parse recyclerView
             rv = findViewById(R.id.recycler_view);
             // String saveUrl = String.format("%s/change_settings?sessionid=%s&", domain, sessionid);
 
-            for(int i = 0; i < rv.getChildCount(); i++ ) {
+            for(int i = 0; i < rv.getChildCount(); i++){
                 LinearLayout ly = (LinearLayout)rv.getChildAt(i);
+                for(int j = 0; j < ly.getChildCount(); j++){
+                    if (ly.getChildAt(j).getVisibility() != GONE && ly.getChildAt(j) instanceof TextInputLayout){
+                        TextInputLayout til = (TextInputLayout)ly.getChildAt(j);
+                        System.out.println(til.getTag() + ": " + Objects.requireNonNull(til.getEditText()).getText().toString());
+                    }
+                    else if (ly.getChildAt(j).getVisibility() != GONE && ly.getChildAt(j) instanceof Switch){
+                        Switch swt = (Switch)ly.getChildAt(j);
+                        System.out.println(swt.getTag() + ": " + swt.isChecked());
+                    }
+                }
             }
-
-
-
-            // TextView textFragment = findViewById(R.id.title);
-            // System.out.println(textFragment.getText().toString());
-            // textFragment.setText("FUNZIONAAAAAA");
+            // endregion
 
         });
+
+        // region start animation
+        findViewById(R.id.fab).setVisibility(GONE);
+        rotateloading = findViewById(R.id.rotateloading);
+        rotateloading.start();
+        // endregion
 
         loadFragment( new DetailsFragment());
 
     }
 
     /**
-     * Nascondi layout se la tastierà è aperta
+     * hide keyboard if open
      */
     private void updateKeyboardStatusText(boolean isOpen) {
 
         if (isOpen)
-            navView.setVisibility(View.GONE);
+            navView.setVisibility(GONE);
         else
             navView.setVisibility(View.VISIBLE);
 
@@ -99,7 +114,8 @@ public class EditActivity extends AppCompatActivity implements BottomNavigationV
 
     private boolean loadFragment(Fragment fragment) {
         if (fragment != null) {
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
+
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).addToBackStack(null).commit();
             extras = getIntent().getExtras();
             Bundle bundle = new Bundle();
             bundle.putString("idApp", extras.getString("idApp"));
@@ -108,7 +124,6 @@ public class EditActivity extends AppCompatActivity implements BottomNavigationV
         }
         return false;
     }
-
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
