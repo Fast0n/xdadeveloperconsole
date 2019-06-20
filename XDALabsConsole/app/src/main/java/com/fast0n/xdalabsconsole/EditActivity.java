@@ -1,9 +1,7 @@
 package com.fast0n.xdalabsconsole;
 
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -72,15 +70,14 @@ public class EditActivity extends AppCompatActivity implements BottomNavigationV
             rv = findViewById(R.id.recycler_view);
             // String saveUrl = String.format("%s/change_settings?sessionid=%s&", domain, sessionid);
 
-            for(int i = 0; i < rv.getChildCount(); i++){
-                LinearLayout ly = (LinearLayout)rv.getChildAt(i);
-                for(int j = 0; j < ly.getChildCount(); j++){
-                    if (ly.getChildAt(j).getVisibility() != GONE && ly.getChildAt(j) instanceof TextInputLayout){
-                        TextInputLayout til = (TextInputLayout)ly.getChildAt(j);
+            for (int i = 0; i < rv.getChildCount(); i++) {
+                LinearLayout ly = (LinearLayout) rv.getChildAt(i);
+                for (int j = 0; j < ly.getChildCount(); j++) {
+                    if (ly.getChildAt(j).getVisibility() != GONE && ly.getChildAt(j) instanceof TextInputLayout) {
+                        TextInputLayout til = (TextInputLayout) ly.getChildAt(j);
                         System.out.println(til.getTag() + ": " + Objects.requireNonNull(til.getEditText()).getText().toString());
-                    }
-                    else if (ly.getChildAt(j).getVisibility() != GONE && ly.getChildAt(j) instanceof Switch){
-                        Switch swt = (Switch)ly.getChildAt(j);
+                    } else if (ly.getChildAt(j).getVisibility() != GONE && ly.getChildAt(j) instanceof Switch) {
+                        Switch swt = (Switch) ly.getChildAt(j);
                         System.out.println(swt.getTag() + ": " + swt.isChecked());
                     }
                 }
@@ -95,7 +92,7 @@ public class EditActivity extends AppCompatActivity implements BottomNavigationV
         rotateloading.start();
         // endregion
 
-        loadFragment( new DetailsFragment());
+        loadFragment(new DetailsFragment());
 
     }
 

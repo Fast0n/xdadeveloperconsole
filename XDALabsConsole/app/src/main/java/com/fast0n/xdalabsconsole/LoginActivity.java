@@ -82,7 +82,7 @@ public class LoginActivity extends AppCompatActivity {
         edt_password = findViewById(R.id.edt_password);
         btn_login = findViewById(R.id.btn_login);
         // endregion
-        
+
         String sessionId = settings.getString("sessionid", null); // get sessionid
 
         if (sessionId != null) {

@@ -11,10 +11,7 @@ import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.AbsListView;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -134,8 +131,8 @@ public class SettingsFragment extends Fragment {
 
             rv = view.findViewById(R.id.recycler_view);
 
-            for(int i = 0; i < rv.getChildCount(); i++ ) {
-                LinearLayout ly = (LinearLayout)rv.getChildAt(i);
+            for (int i = 0; i < rv.getChildCount(); i++) {
+                LinearLayout ly = (LinearLayout) rv.getChildAt(i);
 
                 String id = ((TextInputLayout) ly.getChildAt(1)).getEditText().getTag().toString();
                 String value = ((TextInputLayout) ly.getChildAt(1)).getEditText().getText().toString();
@@ -239,8 +236,7 @@ public class SettingsFragment extends Fragment {
             }
 
 
-        }
-        else {
+        } else {
 
             RequestQueue queue = Volley.newRequestQueue(context);
             queue.getCache().clear();
@@ -299,22 +295,20 @@ public class SettingsFragment extends Fragment {
 
                                     String name = element.getString("name");
                                     String value = element.getString("value");
-                                    if (name.equals("csrfmiddlewaretoken")){
+                                    if (name.equals("csrfmiddlewaretoken")) {
                                         editor.putString("token", value);
                                         editor.apply();
-                                    }
-                                    else{
+                                    } else {
 
-                                        if (element.has("alert")){
+                                        if (element.has("alert")) {
                                             alert = element.getString("alert");
                                         }
-                                        if (element.has("id_name")){
+                                        if (element.has("id_name")) {
                                             id = element.getString("id_name");
                                         }
-                                        if (element.getString("tag").equals("h2")){
+                                        if (element.getString("tag").equals("h2")) {
                                             title = element.getString("value");
-                                        }
-                                        else{
+                                        } else {
                                             dataSettings.add(new DataSettings(id, title, name, value, alert));
                                             title = null;
                                             alert = null;

@@ -11,10 +11,8 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Switch;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -48,7 +46,7 @@ public class CustomAdapterDetailsFragment extends RecyclerView.Adapter<CustomAda
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         DataDetails c = infoList.get(position);
 
-        if (c.type.equals("input") || c.type.equals("textarea")){
+        if (c.type.equals("input") || c.type.equals("textarea")) {
 
             EditText edtValue = holder.tilValue.getEditText(); // get EditText from TextInputLayout
             assert edtValue != null;
@@ -58,9 +56,9 @@ public class CustomAdapterDetailsFragment extends RecyclerView.Adapter<CustomAda
             // endregion
 
             // region input EditText
-            if (c.type.equals("input")){
+            if (c.type.equals("input")) {
                 edtValue.setSingleLine(true); // set single line true
-                edtValue.setFilters(new InputFilter[] { new InputFilter.LengthFilter(30) }); // set 30 char to max length
+                edtValue.setFilters(new InputFilter[]{new InputFilter.LengthFilter(30)}); // set 30 char to max length
             }
             // endregion
 
@@ -74,8 +72,7 @@ public class CustomAdapterDetailsFragment extends RecyclerView.Adapter<CustomAda
             // region price editText
             if (!c.id.equals("price")) {
                 edtValue.setCompoundDrawables(null, null, null, null); // delete drawables from EditText
-            }
-            else {
+            } else {
                 edtValue.setInputType(InputType.TYPE_CLASS_NUMBER);
             }
             // endregion
@@ -87,8 +84,10 @@ public class CustomAdapterDetailsFragment extends RecyclerView.Adapter<CustomAda
                 public void onTextChanged(CharSequence c, int start, int before, int count) {
 
                     // region cache manager
-                    String jsonDetailsChanged = PreferenceManager.getDefaultSharedPreferences(context).getString("detailsChanged", null);
+                    String jsonDetailsChanged;
                     try {
+                        PreferenceManager.getDefaultSharedPreferences(context).edit()
+                                .remove("detailsChanged").apply();
                         // parsing and update JSON
                         JSONObject obj = new JSONObject(chache);
                         JSONArray array = obj.getJSONArray("app");
@@ -96,7 +95,9 @@ public class CustomAdapterDetailsFragment extends RecyclerView.Adapter<CustomAda
                         element.put("value", edtValue.getText().toString());
                         // save JSON
                         jsonDetailsChanged = obj.toString();
-                        PreferenceManager.getDefaultSharedPreferences(context).edit().putString("detailsChanged", jsonDetailsChanged).commit();
+
+                        PreferenceManager.getDefaultSharedPreferences(context).edit()
+                                .putString("detailsChanged", jsonDetailsChanged).apply();
 
 
                         // try
@@ -104,21 +105,24 @@ public class CustomAdapterDetailsFragment extends RecyclerView.Adapter<CustomAda
                         System.out.println(prova);
 
 
-                    }catch (Exception ignored){}
+                    } catch (Exception ignored) {
+                    }
                     // endregion
 
                     FloatingActionButton fab = ((Activity) context).findViewById(R.id.fab);
+                    jsonDetailsChanged = PreferenceManager.getDefaultSharedPreferences(context).getString("detailsChanged", null);
                     if (!chache.equals(jsonDetailsChanged)) {
                         fab.show();
                         ((Activity) context).findViewById(R.id.fab).setVisibility(View.VISIBLE);
-                    }
-                    else
+                    } else
                         fab.hide();
                 }
 
-                public void beforeTextChanged(CharSequence c, int start, int count, int after) {}
+                public void beforeTextChanged(CharSequence c, int start, int count, int after) {
+                }
 
-                public void afterTextChanged(Editable c) {}
+                public void afterTextChanged(Editable c) {
+                }
             });
 
             // endregion
@@ -127,8 +131,7 @@ public class CustomAdapterDetailsFragment extends RecyclerView.Adapter<CustomAda
             holder.tilValue.setHelperText(c.alert); // set TextInputLayout helper text
             holder.tilValue.setTag(c.id); // set TextInputLayout tag
 
-        }
-        else if (c.type.equals("checkbox")){
+        } else if (c.type.equals("checkbox")) {
 
             // region gone elements
             holder.tilValue.setVisibility(View.GONE);
@@ -136,11 +139,10 @@ public class CustomAdapterDetailsFragment extends RecyclerView.Adapter<CustomAda
 
             // region Switch value
             boolean cacheValue;
-            if(c.value.equals("1")){
+            if (c.value.equals("1")) {
                 holder.swtValue.setChecked(true);
                 cacheValue = true;
-            }
-            else {
+            } else {
                 holder.swtValue.setChecked(false);
                 cacheValue = false;
             }
@@ -153,10 +155,9 @@ public class CustomAdapterDetailsFragment extends RecyclerView.Adapter<CustomAda
                 // region cache manager
                 String value = null;
 
-                if(holder.swtValue.isChecked()){
+                if (holder.swtValue.isChecked()) {
                     value = "1";
-                }
-                else {
+                } else {
                     value = "1";
                 }
 
@@ -170,18 +171,18 @@ public class CustomAdapterDetailsFragment extends RecyclerView.Adapter<CustomAda
                     // save JSON string
                     SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
                     SharedPreferences.Editor editor = settings.edit();
-                    editor.putString("detailsChanged", jsonDetailsChanged);
+                    editor.putString("detailsChanged", "pippo");
                     editor.apply();
 
-                } catch (Exception ignored){}
+                } catch (Exception ignored) {
+                }
 
                 // endregion
 
                 if (cacheValue != holder.swtValue.isChecked()) {
                     fab.show();
                     ((Activity) context).findViewById(R.id.fab).setVisibility(View.VISIBLE);
-                }
-                else
+                } else
                     fab.hide();
             });
 
