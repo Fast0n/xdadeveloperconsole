@@ -33,11 +33,8 @@ public class CustomAdapterCategoriesRecycleView extends RecyclerView.Adapter<Cus
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         DataCategories c = infoList.get(position);
-
         holder.txtTitle.setText(c.title);
         Glide.with(context).load(c.url_img).into(holder.ivImg);
-
-
         holder.checkBox.setChecked(c.status);
 
 

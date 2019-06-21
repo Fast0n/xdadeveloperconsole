@@ -322,16 +322,20 @@ def get_app(sessionid, id):
             if alert:
                 add["alert"] = alert.get_text().strip()
         elif select:
-            pass
-            # options = select.find_all("option")
-            # add["options"] = []
-            # for option in options:
-            #     if option.get("selected") == "selected":
-            #         add["value"] = option.get_text()
-            #     else:
-            #         add["options"].append(option.get_text())
-            # add["id"] = select.get("name")
-            # add["type"] = select.name
+            add["title"] = label
+            options = select.find_all("option")
+            add["options"] = []
+            add["value"] = []
+            for option in options:
+                if option.get("selected") == "selected":
+                    add["value"].append(option.get_text())
+                else:
+                    add["options"].append(option.get_text())
+            add["id"] = select.get("name")
+            if select.get("multiple") == "multiple":
+                add["type"] = "multiple"
+            else:
+                add["type"] = select.name
         elif a:
             pass
             # add["id"] = a.get("name")

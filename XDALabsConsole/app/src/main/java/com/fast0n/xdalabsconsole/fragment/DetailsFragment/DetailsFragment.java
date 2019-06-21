@@ -37,12 +37,11 @@ public class DetailsFragment extends Fragment {
 
     // recycleView
     private final List<DataDetails> dataDetails = new ArrayList<>();
-    private final List<DataCategories> dataCategories = new ArrayList<>();
+
     // context
     private Context context;
-    private RecyclerView recyclerView, recyclerViewOne;
+    private RecyclerView recyclerView;
     private CustomAdapterDetailsFragment ca;
-    private CustomAdapterCategoriesRecycleView ca1;
 
     // animation
     private RotateLoading rotateloading;
@@ -70,14 +69,6 @@ public class DetailsFragment extends Fragment {
         recyclerView.setLayoutManager(llm);
         // endregion
 
-        // region set recycle view
-        recyclerViewOne = view.findViewById(R.id.recycler_view_one);
-        recyclerViewOne.setHasFixedSize(true);
-        LinearLayoutManager llm2 = new LinearLayoutManager(context);
-        llm.setOrientation(RecyclerView.VERTICAL);
-        recyclerViewOne.setLayoutManager(llm2);
-        // endregion
-
         // region get arguments
         assert getArguments() != null;
         String id = getArguments().getString("idApp");
@@ -88,22 +79,6 @@ public class DetailsFragment extends Fragment {
 
         getApp(view, url);
 
-
-        for (int j = 1; j < 500; j++) {
-
-            String theme = settings.getString("toggleTheme", null);
-
-            assert theme != null;
-            if (theme.equals("0"))
-                dataCategories.add(new DataCategories("http://simpleicon.com/wp-content/uploads/sun.png", j + "pippo", true));
-
-            else
-                dataCategories.add(new DataCategories("https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/1d7b5f7e-29d3-41c3-8ec5-ba4731b49c25/d887i3g-19cf6e30-2f75-4d87-b54d-9ea378d5f7a0.png/v1/fill/w_894,h_894,strp/skylanders_dark_icon_by_omniferious_d887i3g-pre.png?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7ImhlaWdodCI6Ijw9MTAyNCIsInBhdGgiOiJcL2ZcLzFkN2I1ZjdlLTI5ZDMtNDFjMy04ZWM1LWJhNDczMWI0OWMyNVwvZDg4N2kzZy0xOWNmNmUzMC0yZjc1LTRkODctYjU0ZC05ZWEzNzhkNWY3YTAucG5nIiwid2lkdGgiOiI8PTEwMjQifV1dLCJhdWQiOlsidXJuOnNlcnZpY2U6aW1hZ2Uub3BlcmF0aW9ucyJdfQ.GprAH8Lw_ciTYqo-686Nhj-DsHdPUwkwT7hyQYimJps", j + "pippo", true));
-
-
-        }
-        ca1 = new CustomAdapterCategoriesRecycleView(context, dataCategories);
-        recyclerViewOne.setAdapter(ca1);
 
 
         return view;
@@ -135,14 +110,36 @@ public class DetailsFragment extends Fragment {
                     String id = element.getString("id");
                     String title = element.getString("title");
                     String type = element.getString("type");
-                    String value = element.getString("value");
+                    String value = null;
 
                     String alert = null;
                     if (element.has("alert")) {
                         alert = element.getString("alert");
                     }
 
-                    dataDetails.add(new DataDetails(id, title, type, value, alert));
+
+                    ArrayList<String> list = null;
+                    ArrayList<String> listValue = null;
+
+                    if (element.has("options")){
+                        list = new ArrayList<>();
+                        listValue = new ArrayList<>();
+
+                        JSONArray options = element.getJSONArray("options");
+                        JSONArray arrayValue = element.getJSONArray("value");
+
+
+                        for (int j = 0; j < options.length(); j++)
+                            list.add(options.getString(j));
+
+                        for (int j = 0; j < arrayValue.length(); j++)
+                            listValue.add(arrayValue.getString(j));
+
+                    }
+                    else
+                        value = element.getString("value");
+
+                    dataDetails.add(new DataDetails(id, title, type, value, alert, list, listValue));
                 }
                 // endregion
 
@@ -164,6 +161,9 @@ public class DetailsFragment extends Fragment {
 
 
             } catch (JSONException e) {
+
+                System.out.println(e);
+
                 // region show error message
                 snack = Snackbar.make(view, "Parsing error", Snackbar.LENGTH_LONG);
                 SnackbarHelper.configSnackbar(view.getContext(), snack);
